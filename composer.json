@@ -1,14 +1,18 @@
 {
-  "name": "tasoft/skyline-kernel",
-  "description": "The Skyline CMS bootstrap kernel package to load configuration and prepare the CMS for running",
-  "license": "BSD 3-Clause",
+  "name": "tasoft/php-template",
+  "license": "MIT",
   "authors": [
     {
-      "name": "Th. Abplanalp",
+      "name": "Thomas Abplanalp",
       "email": "info@tasoft.ch"
     }
   ],
-  "require": {
+  "autoload": {
+    "psr-4": {
+      "TASoft\\..." : "src"
+    }
+  },
+  "require" : {
     "php": "^7.2"
   },
   "require-dev": {
