@@ -86,6 +86,12 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="Test Suite" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner directory="$PROJECT_DIR$/Tests" options="--whitelist ./src" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
