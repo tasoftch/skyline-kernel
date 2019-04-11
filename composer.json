@@ -1,6 +1,6 @@
 {
-  "name": "tasoft/php-template",
-  "license": "MIT",
+  "name": "tasoft/skyline-kernel",
+  "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Thomas Abplanalp",
@@ -9,7 +9,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "TASoft\\..." : "src"
+      "Skyline\\Kernel\\" : "src"
     }
   },
   "require" : {
