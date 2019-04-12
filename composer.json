@@ -1,6 +1,7 @@
 {
   "name": "tasoft/skyline-kernel",
   "license": "BSD-3-Clause",
+  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Thomas Abplanalp",
@@ -13,7 +14,13 @@
     }
   },
   "require" : {
-    "php": "^7.2"
+    "php": "^7.2",
+    "ext-PDO": "*",
+    "ext-json": "*",
+    "tasoft/config": "dev-master",
+    "tasoft/service-manager": "dev-master",
+    "tasoft/dependency-injection": "dev-master",
+    "symfony/http-foundation": "^4.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6"
