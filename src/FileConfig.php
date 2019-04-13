@@ -62,7 +62,7 @@ abstract class FileConfig
     }
 
     public static function getSkylineVersion(): string {
-        return static::loadVersion(__DIR__ . "/../../composer.json");
+        return static::loadVersion(__DIR__ . "/../composer.json");
     }
 
     public static function getPackageVersion($package = NULL) {

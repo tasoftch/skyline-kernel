@@ -40,9 +40,13 @@ use Skyline\Kernel\Loader\StaticErrorHandler;
 // You should change every debug or test configuration in your project source.
 
 return [
-    // Set debug and testing to false, so Skyline CMS never displays any information about your file system
+    // Nest debugging and testing into parameters
+
     FileConfig::CONFIG_DEBUG => false,
     FileConfig::CONFIG_TEST => false,
+
+    // Read Skyline CMS Version
+    FileConfig::CONFIG_VERSION => FileConfig::getSkylineVersion(),
 
     // Specify some core locations
     FileConfig::CONFIG_LOCATIONS => [

@@ -34,6 +34,7 @@
 
 namespace Skyline\Kernel;
 
+use Skyline\Kernel\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use TASoft\Config\Transformer\RegexCallback;
@@ -74,37 +75,20 @@ class Bootstrap
             $core['locations'] = $locations;
         }
 
-        /** @var FileLocationsTransformer $controller */
-        $controller = FileLocationsTransformer::getController();
-        $trans = new RegexCallback("/\\$\(([^\)]+)\)/i", function($ms) use ($locations) {
-            return $locations[ $ms[1] ] ?? $ms[0];
-        });
-        $controller->addTransformer($trans);
-
         $config = new Config( $core );
         global $_MAIN_CONFIGURATION;
         $_MAIN_CONFIGURATION = $config;
-
-
-        if($php_sess_domain = $config["PHP_SESSION"]["includeAllSubDomains"] ?? false) {
-            $host = explode(".", $request->getHost());
-            $host[0] = "";
-            ini_set("session.cookie_domain", implode(".", $host));
-        }
-
 
         if($loaders = $config['loaders'] ?? NULL) {
             foreach($loaders as $loaderClass) {
                 /** @var LoaderInterface $loaderClass */
                 $loader = new $loaderClass();
+                /** @var LoaderInterface $loader */
                 $loader->bootstrap( $config , $request);
             }
         }
 
         static::$configuration = $config;
-
-        SkyPostNotificationName(SKYLINE_DID_BOOTSTRAP_NOTIFICATION);
-
         return $config;
     }
 
