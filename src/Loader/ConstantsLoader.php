@@ -32,51 +32,21 @@
  *
  */
 
-namespace Skyline\Kernel\Service\Error;
+namespace Skyline\Kernel\Loader;
 
 
-use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use Symfony\Component\HttpFoundation\Request;
+use TASoft\Config\Config;
 
-class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
+class ConstantsLoader implements LoaderInterface
 {
-    public function handleError(string $message, int $code, $file, $line, $ctx): bool
+    public function __construct()
     {
-        $level = self::detectErrorLevel($code);
-        if($level == static::FATAL_ERROR_LEVEL) {
-            $e = new \Exception($message, 500);
-            $this->handleException($e);
-            die();
-        }
-        // Igonre all other kinds of errors and return true, to stop propagation
-        return true;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function bootstrap(Config $config, ?Request $request)
     {
-        $code = $throwable->getCode();
-        $message = $throwable->getMessage();
-
-        $name = $this->getNameOfCode($code);
-
-        if($throwable instanceof SkylineKernelDetailedException) {
-            $name = $message;
-            $message = $throwable->getDetails();
-        }
-
-        if(!$message)
-            $message = $this->getDescriptionOfCode($code);
-
-
-        echo '<html style="height:100%" lang="en">
-<head><title> '.$code.' '.$name.'
-</title></head>
-<body style="color: #444; margin:0;font: normal 1em Arial, Helvetica, sans-serif; height:100%; background-color: #fff;">
-<div style="height:auto; min-height:100%; ">     <div style="text-align: center; width:24em; margin-left: -12em; position:absolute; top: 30%; left:50%;">
-        <h1 style="margin:0; font-size:10em; line-height:1em; font-weight:bold;">'.$code.'</h1>
-<h2 style="margin-top:20px;font-size: 30px;">'.$name.'
-</h2>
-<p>'.$message.'</p>
-</div></div></body></html>';
-        return true;
+        $path = dirname(dirname(__DIR__)) . "/lib/Constants.php";
+        require $path;
     }
 }

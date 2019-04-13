@@ -32,19 +32,4 @@
  *
  */
 
-namespace Skyline\Kernel;
 
-/**
- * Exposing classes in Skyline CMS make them accessible in the user interface design depending on their purposes
- *
- * @package Skyline\Kernel
- */
-interface ExposeClassInterface
-{
-    /**
-     * Specify for what purposes this class should be exposed
-     * Example: This class is a service or is an action controller. Purposes are specified by yourself.
-     * @return array|string[]
-     */
-    public static function getPurposes(): array;
-}
