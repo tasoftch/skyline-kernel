@@ -21,23 +21,30 @@
  * SOFTWARE.
  */
 
-use Skyline\Kernel\FileConfig;
-use Skyline\Kernel\Loader\StaticErrorHandler;
+namespace Skyline\Kernel\Exception;
 
-// For safety reasons the kernel configuration is designed for production.
-// You should change every debug or test configuration in your project source.
 
-return [
-    // Set debug and testing to false, so Skyline CMS never displays any information about your file system
-    FileConfig::CONFIG_DEBUG => false,
-    FileConfig::CONFIG_TEST => false,
+class SkylineKernelDetailedException extends SkylineKernelException
+{
+    /** @var string|null */
+    private $details;
 
-    // Specify some core locations
-    FileConfig::CONFIG_LOCATIONS => [
-        'kernel-lib' => __DIR__
-    ],
+    /**
+     * @return null|string
+     */
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
 
-    FileConfig::CONFIG_LOADERS => [
-        'errors' => StaticErrorHandler::class
-    ]
-];
+    /**
+     * @param null|string $details
+     */
+    public function setDetails(string $format, ...$args): void
+    {
+        if($args)
+            $this->details = vsprintf($format, $args);
+        else
+            $this->details = $format;
+    }
+}

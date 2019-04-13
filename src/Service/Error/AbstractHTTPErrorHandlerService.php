@@ -21,23 +21,32 @@
  * SOFTWARE.
  */
 
-use Skyline\Kernel\FileConfig;
-use Skyline\Kernel\Loader\StaticErrorHandler;
+namespace Skyline\Kernel\Service\Error;
 
-// For safety reasons the kernel configuration is designed for production.
-// You should change every debug or test configuration in your project source.
 
-return [
-    // Set debug and testing to false, so Skyline CMS never displays any information about your file system
-    FileConfig::CONFIG_DEBUG => false,
-    FileConfig::CONFIG_TEST => false,
+abstract class AbstractHTTPErrorHandlerService extends AbstractErrorHandlerService
+{
+    private static $codeNames, $codeDescriptions;
 
-    // Specify some core locations
-    FileConfig::CONFIG_LOCATIONS => [
-        'kernel-lib' => __DIR__
-    ],
+    protected function getNameOfCode(int $code) {
+        if(!self::$codeNames) {
+            $p = SkyGetPath('kernel-lib', 'http.codes.names.php');
+            if($p)
+                self::$codeNames = require($p);
+            else
+                self::$codeNames = [];
+        }
+        return self::$codeNames[$code] ?? NULL;
+    }
 
-    FileConfig::CONFIG_LOADERS => [
-        'errors' => StaticErrorHandler::class
-    ]
-];
+    protected function getDescriptionOfCode(int $code) {
+        if(!self::$codeDescriptions) {
+            $p = SkyGetPath('kernel-lib', 'http.codes.descriptions.php');
+            if($p)
+                self::$codeDescriptions = require($p);
+            else
+                self::$codeDescriptions = [];
+        }
+        return self::$codeDescriptions[$code] ?? NULL;
+    }
+}

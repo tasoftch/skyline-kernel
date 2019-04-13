@@ -33,7 +33,8 @@ abstract class FileConfig
     const CONFIG_TEST = 'Test';
     const CONFIG_LOADERS = 'loaders';
     const CONFIG_SERVICES = 'services';
-    const CONFIG_PHP_SESSION = 'PHP_SESSION';
+    const CONFIG_LOCATIONS = 'locations';
+
     const CONFIG_VERSION = 'version';
 
     // Predefined Services
