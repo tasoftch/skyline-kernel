@@ -37,12 +37,11 @@ namespace Skyline\Kernel;
 use Skyline\Kernel\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
-use TASoft\Config\Transformer\RegexCallback;
 use Skyline\Kernel\Exception\BootstrapException;
 
 /**
  * This class is called from skyline entry point to load the required environment.
- * To change it, see the skyline-cms compiler and project files.
+ * To change it, see the Skyline CMS compiler and project files.
  *
  * Class Bootstrap
  * @package TASoft\Kernel
@@ -51,13 +50,27 @@ class Bootstrap
 {
     protected static $configuration;
 
-    public static $development = false;
-
+    /**
+     * Declare the main configuration file to boot from.
+     *
+     * @param string $skylineDirectory
+     * @param Request $request
+     * @return string
+     */
     public static function getConfigurationPath($skylineDirectory, Request $request) {
         return "$skylineDirectory/Compiled/main.config.php";
     }
 
+    /**
+     * Bootstraps Skyline CMS. This method is called from entry point to load the configuration and setup environment
+     *
+     * @param $compiledMainConfigurationFile
+     * @param string|NULL $projectDir
+     * @param Request|NULL $request
+     * @return Config
+     */
     public static function bootstrap($compiledMainConfigurationFile, string $projectDir = NULL, Request $request = NULL): Config {
+        // Load configuration if needed
         if(is_file($compiledMainConfigurationFile))
             $core = require $compiledMainConfigurationFile;
         elseif(is_array($compiledMainConfigurationFile))
@@ -65,20 +78,23 @@ class Bootstrap
         else
             throw new BootstrapException("Could not load Skyline CMS environment configuration", 500);
 
+        // Apply different project directory to relative locations than current working directory
         $locations = $core['locations'];
-
         if($projectDir) {
             foreach($locations as &$loc) {
-                $loc = "$projectDir/$loc";
+                if($loc[0] != '/') // Do not touch absolute directory locations!
+                    $loc = "$projectDir/$loc";
             }
 
             $core['locations'] = $locations;
         }
 
+        // Expose main configuration, so the SkyMainConfig* functions have access
         $config = new Config( $core );
         global $_MAIN_CONFIGURATION;
         $_MAIN_CONFIGURATION = $config;
 
+        // Iterate over loaders and bootstrap
         if($loaders = $config['loaders'] ?? NULL) {
             foreach($loaders as $loaderClass) {
                 /** @var LoaderInterface $loaderClass */
