@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Kernel\Loader;
+namespace Skyline\Kernel\Loader;
 
 
 use Symfony\Component\HttpFoundation\Request;

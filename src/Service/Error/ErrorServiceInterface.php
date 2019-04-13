@@ -21,17 +21,34 @@
  * SOFTWARE.
  */
 
-use Skyline\Kernel\FileConfig;
-use Skyline\Kernel\Loader\StaticErrorHandler;
+namespace Skyline\Kernel\Service\Error;
 
-// For safety reasons the kernel configuration is designed for production.
-// You should change every debug or test configuration in your project source.
+/**
+ * Interface ErrorServiceInterface is able to handle errors that occured during your application launch
+ *
+ * @package TASoft\Kernel\Service\Error
+ */
+interface ErrorServiceInterface
+{
+    /**
+     * Called if an error has occured that should be reported.
+     * If this method returns true, Skyline CMS assumes that this error was handled and will continue (except for fatal errors).
+     *
+     * @param string $message
+     * @param int $code
+     * @param string $file
+     * @param int $line
+     * @param $ctx
+     * @return bool
+     */
+    public function handleError(string $message, int $code, $file, $line, $ctx): bool;
 
-return [
-    FileConfig::CONFIG_DEBUG => false,
-    FileConfig::CONFIG_TEST => false,
-
-    FileConfig::CONFIG_LOADERS => [
-        'errors' => StaticErrorHandler::class
-    ]
-];
+    /**
+     * Called if an uncaught exception was thrown.
+     * If this method returns true, Skyline CMS assumes the exception was handled.
+     *
+     * @param \Throwable $throwable
+     * @return bool
+     */
+    public function handleException(\Throwable $throwable): bool;
+}

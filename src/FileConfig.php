@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Kernel;
+namespace Skyline\Kernel;
 
 
 abstract class FileConfig
@@ -35,6 +35,10 @@ abstract class FileConfig
     const CONFIG_SERVICES = 'services';
     const CONFIG_PHP_SESSION = 'PHP_SESSION';
     const CONFIG_VERSION = 'version';
+
+    // Predefined Services
+    const SERVICE_ERROR_CONTROLLER = 'errorController';
+
 
     public static function loadVersion($composerFileName) {
         $cmp = file_get_contents($composerFileName);

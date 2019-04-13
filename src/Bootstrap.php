@@ -21,12 +21,12 @@
  * SOFTWARE.
  */
 
-namespace TASoft\Kernel;
+namespace Skyline\Kernel;
 
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use TASoft\Config\Transformer\RegexCallback;
-use TASoft\Kernel\Exception\BootstrapException;
+use Skyline\Kernel\Exception\BootstrapException;
 
 /**
  * This class is called from skyline entry point to load the required environment.

@@ -30,6 +30,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Service\Error\AbstractErrorHandlerService;
 use Skyline\Kernel\Service\Error\ErrorServiceInterface;
 use TASoft\Config\Config;
 use Skyline\Kernel\Loader\StaticErrorHandler;
@@ -85,6 +86,7 @@ class ErrorHandlngTest extends TestCase
             __LINE__ - 6
         ], $this->ec->error);
 
+        $this->ec->returnValue = false;
         $zahl = $unexisting;
 
         $this->assertEquals([
@@ -94,11 +96,14 @@ class ErrorHandlngTest extends TestCase
             __LINE__ - 6
         ], $this->ec->error);
 
+        $output = $this->getActualOutput();
+        $this->assertEquals("<pre><b>Error</b> [8]: Undefined variable: unexisting</pre>", $output);
+
         $this->unload();
     }
 }
 
-class MyErrHandler implements ErrorServiceInterface {
+class MyErrHandler extends AbstractErrorHandlerService implements ErrorServiceInterface {
     public $returnValue = true;
 
     public $error;
