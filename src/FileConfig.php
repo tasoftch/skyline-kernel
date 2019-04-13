@@ -51,7 +51,12 @@ abstract class FileConfig
     // Predefined Services
     const SERVICE_ERROR_CONTROLLER = 'errorController';
 
-
+    /**
+     * Loads the version from a composer.json file
+     *
+     * @param $composerFileName
+     * @return bool
+     */
     public static function loadVersion($composerFileName) {
         $cmp = file_get_contents($composerFileName);
         $json = json_decode($cmp, true);
@@ -61,10 +66,20 @@ abstract class FileConfig
         return $version;
     }
 
+    /**
+     * Return this Skyline CMS version
+     * @return string
+     */
     public static function getSkylineVersion(): string {
         return static::loadVersion(__DIR__ . "/../composer.json");
     }
 
+    /**
+     * Tries to obtain the version of a composer package
+     *
+     * @param null $package
+     * @return bool
+     */
     public static function getPackageVersion($package = NULL) {
         if(!$package) {
             $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
