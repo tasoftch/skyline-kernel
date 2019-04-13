@@ -34,6 +34,7 @@
 
 use Skyline\Kernel\FileConfig;
 use Skyline\Kernel\Loader\ConstantsLoader;
+use Skyline\Kernel\Loader\FunctionLibraryLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 
 // For safety reasons the kernel configuration is designed for production.
@@ -55,6 +56,7 @@ return [
 
     FileConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
-        'constants' => ConstantsLoader::class
+        'constants' => ConstantsLoader::class,
+        "functions" => FunctionLibraryLoader::class
     ]
 ];
