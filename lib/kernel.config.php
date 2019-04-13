@@ -35,6 +35,7 @@
 use Skyline\Kernel\FileConfig;
 use Skyline\Kernel\Loader\ConstantsLoader;
 use Skyline\Kernel\Loader\FunctionLibraryLoader;
+use Skyline\Kernel\Loader\ModulePrefixLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 
 // For safety reasons the kernel configuration is designed for production.
@@ -51,12 +52,19 @@ return [
 
     // Specify some core locations
     FileConfig::CONFIG_LOCATIONS => [
-        'kernel-lib' => __DIR__
+        'kernel-lib' => __DIR__,
+        'C' => '$(/)/Compiled',
+
+        // Your project MUST declare the root Skyline App Data path if different to default
+        '/' => 'SkylineAppData',
     ],
 
+    // Define the core loaders. They can be overwritten by a project config or api config or what else.
+    // You should not change the oder they are loaded!
     FileConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
         'constants' => ConstantsLoader::class,
-        "functions" => FunctionLibraryLoader::class
+        "functions" => FunctionLibraryLoader::class,
+        "modules" => ModulePrefixLoader::class
     ]
 ];

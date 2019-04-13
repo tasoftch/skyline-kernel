@@ -37,4 +37,4 @@ use Skyline\Kernel\FileConfig;
 // $config is imported by Skyline\Kernel\Loader\ConstantsLoader
 /** @var TASoft\Config\Config $config */
 
-define("SKYLINE_VERSION", $config[ FileConfig::CONFIG_VERSION ], true);
+define("SKY_VERSION", $config[ FileConfig::CONFIG_VERSION ], true);

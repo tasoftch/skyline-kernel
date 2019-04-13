@@ -68,17 +68,8 @@ function SkyMainConfigGet($key, $default = NULL) {
         $value = ServiceManager::generalServiceManager()->mapValue($value, true);
     } catch (ServiceException $exception) {}
 
-    if(is_string($value)) {
-        while(strpos($value, '$(') !== false) {
-            $value = preg_replace_callback("/\\$\(([^\)]+)\)/i", function($ms) use ($config) {
-                $loc = $config[ FileConfig::CONFIG_LOCATIONS ][$ms[1]] ?? NULL;
-                if($loc) {
-                    return $loc;
-                }
-                trigger_error("Location $ms[1] not found", E_USER_WARNING);
-                return NULL;
-            }, $value);
-        }
+    if(is_string($value) && strpos($value, '$(') !== false) {
+        return SkyGetPath($value, false);
     }
 
     return $value;
@@ -91,9 +82,31 @@ function SkyMainConfigGet($key, $default = NULL) {
  * @param string $appendix
  * @return bool|string
  */
-function SkyGetPath($location, $appendix = '') {
+function SkyGetLocation($location, $appendix = '') {
     $p = SkyMainConfig() [ FileConfig::CONFIG_LOCATIONS ][$location] ?? "#";
     if($appendix)
         $p .= "/$appendix";
     return realpath($p);
+}
+
+/**
+ * Resolves any $(...) location specifier to its absolute path
+ *
+ * @param $path
+ * @return string|bool
+ */
+function SkyGetPath($path, bool $real = true) {
+    while(strpos($path, '$(') !== false) {
+        $path = preg_replace_callback("/\\$\(([^\)]+)\)/i", function($ms) {
+            global $_MAIN_CONFIGURATION;
+
+            $loc = $_MAIN_CONFIGURATION[ FileConfig::CONFIG_LOCATIONS ][$ms[1]] ?? NULL;
+            if($loc) {
+                return $loc;
+            }
+            trigger_error("Location $ms[1] not found", E_USER_WARNING);
+            return NULL;
+        }, $path);
+    }
+    return $real ? realpath($path) : $path;
 }
