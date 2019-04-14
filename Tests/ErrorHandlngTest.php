@@ -97,7 +97,7 @@ class ErrorHandlngTest extends TestCase
         ], $this->ec->error);
 
         $output = $this->getActualOutput();
-        $this->assertEquals("<pre><b>Error</b> [8]: Undefined variable: unexisting</pre>", $output);
+        $this->assertEquals("", $output);
 
         $this->unload();
     }

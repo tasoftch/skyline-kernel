@@ -35,6 +35,7 @@
 namespace Skyline\Kernel\Service\DI;
 
 
+use Skyline\Kernel\Config\PluginConfig;
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
 use TASoft\DI\DependencyManager;
 use TASoft\EventManager\EventManager;
@@ -61,8 +62,14 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
         $plugins = require $path;
         /** @var DependencyManager $dm */
         $dm = NULL;
-        foreach($plugins as $plugin) {
+        foreach($plugins as $idx => $plugin) {
+            if($class = $plugin[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
 
+            } elseif($service = $plugin[ PluginConfig::PLUGIN_SERVICE_NAME ] ?? NULL) {
+
+            } else {
+                trigger_error("Can not register plugin $idx because a plugin class or plugin service name is required", E_USER_WARNING);
+            }
         }
     }
 

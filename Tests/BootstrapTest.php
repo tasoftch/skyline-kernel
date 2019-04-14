@@ -41,10 +41,12 @@
 
 use PHPUnit\Framework\TestCase;
 use Skyline\Kernel\Bootstrap;
+use TASoft\Service\ServiceManager;
 
 class BootstrapTest extends TestCase
 {
     public function testBootstrap() {
+        ServiceManager::rejectGeneralServiceManager();
         Bootstrap::bootstrap('../lib/kernel.config.php');
 
     }

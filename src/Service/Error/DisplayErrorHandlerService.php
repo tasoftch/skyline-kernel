@@ -32,8 +32,26 @@
  *
  */
 
-return [
-    'testPlugin' => [
+namespace Skyline\Kernel\Service\Error;
 
-    ]
-];
+
+class DisplayErrorHandlerService extends AbstractErrorHandlerService
+{
+    public function handleError(string $message, int $code, $file, $line, $ctx): bool
+    {
+        switch (self::detectErrorLevel($code)) {
+            case self::NOTICE_ERROR_LEVEL: echo "Notice "; break;
+            case self::WARNING_ERROR_LEVEL: echo "Warning "; break;
+            case self::DEPRECATED_ERROR_LEVEL: echo "Deprecated "; break;
+            default: echo "Fatal Error "; break;
+        }
+        echo "[$code]: $message" . PHP_EOL;
+        return false;
+    }
+
+    public function handleException(\Throwable $throwable): bool
+    {
+        echo "Uncaught Exception (", get_class($throwable) . ") [{$throwable->getCode()}]: {$throwable->getMessage()}" . PHP_EOL;
+        return false;
+    }
+}

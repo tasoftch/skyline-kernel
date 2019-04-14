@@ -83,15 +83,11 @@ class StaticErrorHandler implements LoaderInterface
         if($ec) {
             /** @var ErrorServiceInterface $ec */
             if( $ec->handleException($exception) )
-                return;
+                return true;
         }
-
-        static::defaultExceptionOutput($exception);
+        return false;
     }
 
-    protected static function defaultExceptionOutput(\Throwable $exception) {
-        echo "<pre><b>Uncaught Exception (", get_class($exception) . ")</b> [{$exception->getCode()}]: {$exception->getMessage()}\n</pre>";
-    }
 
 
     public static function handleError($code, $msg, $file, $line, $ctx) {
@@ -102,16 +98,12 @@ class StaticErrorHandler implements LoaderInterface
             if($ec) {
                 /** @var ErrorServiceInterface $ec */
                 if( $ec->handleError($msg, $code, $file, $line, $ctx) )
-                    return;
+                    return true;
             }
 
-            static::defaultErrorOutput($code, $msg, $file, $line, $ctx);
             if(AbstractErrorHandlerService::detectErrorLevel($code) == AbstractErrorHandlerService::FATAL_ERROR_LEVEL)
                 exit(255);
         }
-    }
-
-    protected static function defaultErrorOutput($code, $msg, $file, $line, $ctx) {
-        echo "<pre><b>Error</b> [$code]: $msg</pre>";
+        return false;
     }
 }

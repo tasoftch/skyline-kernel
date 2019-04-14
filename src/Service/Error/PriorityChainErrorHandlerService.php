@@ -92,7 +92,7 @@ class PriorityChainErrorHandlerService extends LinearChainErrorHandlerService
         $priority = 0;
 
         foreach($args as $servicePKG) {
-            if(is_array($servicePKG)) {
+            if(is_array($servicePKG) || $servicePKG instanceof \ArrayAccess) {
                 list($priority, $service) = $servicePKG;
             } else {
                 $service = $servicePKG;

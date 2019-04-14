@@ -32,43 +32,52 @@
  *
  */
 
-namespace Skyline\Kernel\Loader;
+namespace Skyline\Kernel\Service\Error;
 
 
-use Skyline\Kernel\Config\MainKernelConfig;
-use Symfony\Component\HttpFoundation\Request;
-use TASoft\Config\Config;
-use TASoft\Service\ServiceManager;
-
-/**
- * Loads the service manager and its parameter list
- * @package Skyline\Kernel\Loader
- */
-class ServiceManagerLoader implements LoaderInterface
+class LogErrorHandlerService extends AbstractErrorHandlerService
 {
-    public function __construct()
+    const EXCEPTION_ERROR_LEVEL = 10;
+
+    private $logFile;
+
+    public function handleError(string $message, int $code, $file, $line, $ctx): bool
     {
+        $json = json_decode( file_get_contents($this->logFile), true );
+        $json[] = [
+            'level' => self::detectErrorLevel($code),
+            'code' => $code,
+            'message' => $message,
+            'file' => SkyDisplayPath($file),
+            'line' => $line
+        ];
+
+        file_put_contents($this->logFile, json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        return false;
     }
 
-    public function bootstrap(Config $configuration, ?Request $request)
+    public function handleException(\Throwable $throwable): bool
     {
-        $services = $configuration[ MainKernelConfig::CONFIG_SERVICES ] ?? [];
-        global $SERVICES;
-        ServiceManager::rejectGeneralServiceManager();
-        $SERVICES = ServiceManager::generalServiceManager($services);
-        /** @var ServiceManager $SERVICES */
-        $SERVICES->addCustomArgumentHandler(function($key, $value) {
-            if(is_string($value) && strpos($value, '$(') !== false)
-                return SkyGetPath($value, false);
-            return $value;
-        }, "LOCATIONS");
+        $json = json_decode( file_get_contents($this->logFile), true );
+        $json[] = [
+            'level' => self::EXCEPTION_ERROR_LEVEL,
+            'code' => $throwable->getCode(),
+            'message' => $throwable->getMessage(),
+            'file' => SkyDisplayPath($throwable->getFile()),
+            'line' => $throwable->getLine()
+        ];
 
-        if($path = SkyGetPath("$(C)/parameters.config.php")) {
-            $params = require $path;
+        file_put_contents($this->logFile, json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        return false;
+    }
 
-            foreach($params as $name => $value) {
-                $SERVICES->setParameter($name, $value);
-            }
-        }
+    public function __construct(string $logFile)
+    {
+        if(is_file($logFile)) {
+            $this->logFile = $logFile;
+        } elseif(is_dir($logFile)) {
+            $this->logFile = "$logFile/" . date("Y-m-d_G.i.s_") . uniqid() . ".log.php";
+        } else
+            error_log(sprintf("ErrorLogger: File or Directory %s does not exist", SkyDisplayPath($logFile)), E_USER_WARNING);
     }
 }

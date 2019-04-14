@@ -39,6 +39,9 @@ use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 use Skyline\Kernel\Service\DI\DependencyInjectionContainer;
 use Skyline\Kernel\Service\DI\EventManagerContainer;
+use Skyline\Kernel\Service\Error\DisplayErrorHandlerService;
+use Skyline\Kernel\Service\Error\LogErrorHandlerService;
+use Skyline\Kernel\Service\Error\PriorityChainErrorHandlerService;
 use TASoft\Service\Config\AbstractFileConfiguration;
 
 // For safety reasons the kernel configuration is designed for production.
@@ -55,8 +58,12 @@ return [
 
     // Specify some core locations
     MainKernelConfig::CONFIG_LOCATIONS => [
-        'kernel-lib' => __DIR__,
+        // The Skyline Kernel core library
+        'kernel-lib' => 'vendor/skyline/lib',
+
+        // The precompiled
         'C' => '$(/)/Compiled',
+        'L' => '$(/)/Logs',
 
         // Your project MUST declare the root Skyline App Data path if different to default
         '/' => 'SkylineAppData',
@@ -80,6 +87,22 @@ return [
             AbstractFileConfiguration::SERVICE_CONTAINER => EventManagerContainer::class,
             AbstractFileConfiguration::SERVICE_INIT_CONFIGURATION => [
                 'pluginFile' => '$(C)/plugins.php'
+            ]
+        ],
+        MainKernelConfig::SERVICE_ERROR_CONTROLLER => [
+            AbstractFileConfiguration::SERVICE_CLASS => PriorityChainErrorHandlerService::class,
+            AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
+                [-2, '$logErrorHandler'],
+                [-1, '$displayErrorHandler']
+            ]
+        ],
+        'displayErrorHandler' => [
+            AbstractFileConfiguration::SERVICE_CLASS => DisplayErrorHandlerService::class
+        ],
+        "logErrorHandler" => [
+            AbstractFileConfiguration::SERVICE_CLASS => LogErrorHandlerService::class,
+            AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
+                'file' => '$(L)/'
             ]
         ]
     ]

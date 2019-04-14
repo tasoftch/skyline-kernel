@@ -60,6 +60,7 @@ class ConfigurationFuncsTest extends TestCase
     }
 
     public function testServiceResolve() {
+        ServiceManager::rejectGeneralServiceManager();
         ServiceManager::generalServiceManager([
             'myService' => [
                 AbstractFileConfiguration::SERVICE_CLASS => Service1::class
@@ -72,8 +73,6 @@ class ConfigurationFuncsTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Service1::class, SkyMainConfigGet('PDO'));
-
-        ServiceManager::rejectGeneralServiceManager();
     }
 
     public function testLocationResolve() {
@@ -89,6 +88,7 @@ class ConfigurationFuncsTest extends TestCase
     }
 
     public function testParameterResolve() {
+        ServiceManager::rejectGeneralServiceManager();
         $sm = ServiceManager::generalServiceManager([]);
 
         global $_MAIN_CONFIGURATION;
@@ -98,14 +98,13 @@ class ConfigurationFuncsTest extends TestCase
 
         $sm->setParameter("PDO", 'My PDO');
         $this->assertEquals("My PDO", SkyMainConfigGet('PDO'));
-
-        ServiceManager::rejectGeneralServiceManager();
     }
 
     /**
      * @expectedException PHPUnit\Framework\Error\Warning
      */
     public function testUnknownParameterResolve() {
+        ServiceManager::rejectGeneralServiceManager();
         $sm = ServiceManager::generalServiceManager([]);
 
         global $_MAIN_CONFIGURATION;
@@ -115,8 +114,6 @@ class ConfigurationFuncsTest extends TestCase
 
         $sm->setParameter("P", 'My PDO');
         $this->assertEquals("My PDO", SkyMainConfigGet('PDO'));
-
-        ServiceManager::rejectGeneralServiceManager();
     }
 
     public function testMultiplePathResolve() {

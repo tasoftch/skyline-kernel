@@ -119,5 +119,43 @@ function SkyGetPath($path, bool $real = true) {
  * @return string
  */
 function SkyDisplayPath($path) {
+    if(defined("SKY_DEBUG") && SKY_DEBUG)
+        return $path;
+    if(defined("SKY_TEST") && SKY_TEST)
+        return SkyRelativePath(getcwd() . "/_", $path);
 
+    return basename($path);
+}
+
+/**
+ * Resolves a relative path from source to target
+ *
+ * @param $sourcePath
+ * @param $targetPath
+ * @return string
+ */
+function SkyRelativePath($sourcePath, $targetPath) {
+    if ($sourcePath === $targetPath) {
+        return '';
+    }
+
+    $sourceDirs = explode('/', isset($sourcePath[0]) && '/' === $sourcePath[0] ? substr($sourcePath, 1) : $sourcePath);
+    $targetDirs = explode('/', isset($targetPath[0]) && '/' === $targetPath[0] ? substr($targetPath, 1) : $targetPath);
+    array_pop($sourceDirs);
+    $targetFile = array_pop($targetDirs);
+
+    foreach ($sourceDirs as $i => $dir) {
+        if (isset($targetDirs[$i]) && $dir === $targetDirs[$i]) {
+            unset($sourceDirs[$i], $targetDirs[$i]);
+        } else {
+            break;
+        }
+    }
+
+    $targetDirs[] = $targetFile;
+    $path = str_repeat('../', count($sourceDirs)).implode('/', $targetDirs);
+
+    return '' === $path || '/' === $path[0]
+    || false !== ($colonPos = strpos($path, ':')) && ($colonPos < ($slashPos = strpos($path, '/')) || false === $slashPos)
+        ? "./$path" : $path;
 }
