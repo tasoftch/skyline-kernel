@@ -32,16 +32,31 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
-use TASoft\Service\ServiceManager;
+namespace Skyline\Kernel\Event;
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
 
-/** @var ServiceManager $SERVICES */
-global $SERVICES;
+use TASoft\EventManager\Event\Event;
 
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+class BootstrapEvent extends Event
+{
+    private $configuration;
 
-define("SKY_DEBUG", $SERVICES->getParameter("CMS.Debug"), true);
-define("SKY_TEST", $SERVICES->getParameter("CMS.Test"), true);
+    /**
+     * BootstrapEvent constructor.
+     * @param $configuration
+     */
+    public function __construct($configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+
+}

@@ -71,8 +71,6 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
                 trigger_error("Can not register plugin $idx because a plugin class or plugin service name is required", E_USER_WARNING);
             }
         }
-        trigger_error("Ätsch", E_USER_NOTICE);
-        trigger_error("Lala", E_USER_DEPRECATED);
     }
 
     public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)

@@ -45,6 +45,20 @@ use TASoft\Service\ServiceManager;
 
 class BootstrapTest extends TestCase
 {
+    private $time;
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->time = microtime(true);
+    }
+
+    protected function tearDown()
+    {
+        $diff = microtime(true) - $this->time;
+        printf("%.1fms", $diff*1000);
+        parent::tearDown();
+    }
+
     public function testBootstrap() {
         ServiceManager::rejectGeneralServiceManager();
         Bootstrap::bootstrap('../lib/kernel.config.php');
@@ -52,10 +66,10 @@ class BootstrapTest extends TestCase
         /** @var ServiceManager $SERVICES */
         global $SERVICES;
 
-        $this->assertFalse( $SERVICES->getParameter("Debug") );
-        $this->assertTrue( $SERVICES->getParameter("Test") );
+        $this->assertFalse( $SERVICES->getParameter("CMS.Debug") );
+        $this->assertFalse( $SERVICES->getParameter("CMS.Test") );
 
         $this->assertFalse(SKY_DEBUG);
-        $this->assertTrue(SKY_TEST);
+        $this->assertFalse(SKY_TEST);
     }
 }

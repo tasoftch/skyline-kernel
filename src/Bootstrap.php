@@ -35,6 +35,7 @@
 namespace Skyline\Kernel;
 
 use Skyline\Kernel\Config\MainKernelConfig;
+use Skyline\Kernel\Event\BootstrapEvent;
 use Skyline\Kernel\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
@@ -107,7 +108,7 @@ class Bootstrap
         }
 
         static::$configuration = $config;
-        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger("bootstrap");
+        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger("bootstrap", new BootstrapEvent($config));
         return $config;
     }
 

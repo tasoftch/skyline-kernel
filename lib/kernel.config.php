@@ -50,8 +50,8 @@ use TASoft\Service\Config\AbstractFileConfiguration;
 return [
     // Nest debugging and testing into parameters
 
-    MainKernelConfig::CONFIG_DEBUG => '%Debug%',
-    MainKernelConfig::CONFIG_TEST => '%Test%',
+    MainKernelConfig::CONFIG_DEBUG => '%CMS.Debug%',
+    MainKernelConfig::CONFIG_TEST => '%CMS.Test%',
 
     // Read Skyline CMS Version
     MainKernelConfig::CONFIG_VERSION => MainKernelConfig::getSkylineVersion(),
@@ -103,7 +103,7 @@ return [
             AbstractFileConfiguration::SERVICE_CLASS => LogErrorHandlerService::class,
             AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
                 'file' => '$(L)/',
-                'env' => false
+                'env' => '%Logger.Env%'
             ]
         ]
     ]
