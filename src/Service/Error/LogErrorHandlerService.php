@@ -44,7 +44,7 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
     public function handleError(string $message, int $code, $file, $line, $ctx): bool
     {
         $json = json_decode( file_get_contents($this->logFile), true );
-        $json[] = [
+        $json['E'] = [
             'level' => self::detectErrorLevel($code),
             'code' => $code,
             'message' => $message,
@@ -59,7 +59,7 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
     public function handleException(\Throwable $throwable): bool
     {
         $json = json_decode( file_get_contents($this->logFile), true );
-        $json[] = [
+        $json['E'] = [
             'level' => self::EXCEPTION_ERROR_LEVEL,
             'code' => $throwable->getCode(),
             'message' => $throwable->getMessage(),
@@ -71,7 +71,7 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
         return false;
     }
 
-    public function __construct(string $logFile)
+    public function __construct(string $logFile, bool $logEnv = false)
     {
         if(is_file($logFile)) {
             $this->logFile = $logFile;
@@ -79,5 +79,12 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
             $this->logFile = "$logFile/" . date("Y-m-d_G.i.s_") . uniqid() . ".log.php";
         } else
             error_log(sprintf("ErrorLogger: File or Directory %s does not exist", SkyDisplayPath($logFile)), E_USER_WARNING);
+
+        if($this->logFile) {
+            $json = json_decode( file_get_contents($this->logFile), true );
+            $json['_'] = $logEnv ? $_SERVER : '<no-env>';
+
+            file_put_contents($this->logFile, json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        }
     }
 }

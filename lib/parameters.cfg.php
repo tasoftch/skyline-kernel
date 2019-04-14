@@ -32,16 +32,8 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
-use TASoft\Service\ServiceManager;
-
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
-
-/** @var ServiceManager $SERVICES */
-global $SERVICES;
-
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
-
-define("SKY_DEBUG", $SERVICES->getParameter("Debug"), true);
-define("SKY_TEST", $SERVICES->getParameter("Test"), true);
+return [
+    // Nested from kernel.config.php => MainKernelConfig::CONFIG_DEBUG and MainKernelConfig::CONFIG_TEST
+    'Debug' => false,
+    'Test' => true
+];

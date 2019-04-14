@@ -49,5 +49,13 @@ class BootstrapTest extends TestCase
         ServiceManager::rejectGeneralServiceManager();
         Bootstrap::bootstrap('../lib/kernel.config.php');
 
+        /** @var ServiceManager $SERVICES */
+        global $SERVICES;
+
+        $this->assertFalse( $SERVICES->getParameter("Debug") );
+        $this->assertTrue( $SERVICES->getParameter("Test") );
+
+        $this->assertFalse(SKY_DEBUG);
+        $this->assertTrue(SKY_TEST);
     }
 }
