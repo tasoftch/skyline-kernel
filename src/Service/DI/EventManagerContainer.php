@@ -36,6 +36,7 @@ namespace Skyline\Kernel\Service\DI;
 
 
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use TASoft\DI\DependencyManager;
 use TASoft\EventManager\EventManager;
 use TASoft\Service\ConfigurableServiceInterface;
 use TASoft\Service\Container\AbstractContainer;
@@ -50,14 +51,19 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
     protected function loadInstance()
     {
         $this->instance = new EventManager();
-        $path = $this->configuration["pluginFile"] ?? NULL;
+        $path = SkyGetPath($this->configuration["pluginFile"] ?? NULL, false);
         if(!is_file($path)) {
             $e = new SkylineKernelDetailedException("Plugin Path Error");
-            $e->setDetails("Can not load plugins from configuration path. A php file is required");
+            $e->setDetails("Can not load plugins from configuration path %s", SkyDisplayPath($path));
             throw $e;
         }
 
+        $plugins = require $path;
+        /** @var DependencyManager $dm */
+        $dm = NULL;
+        foreach($plugins as $plugin) {
 
+        }
     }
 
     public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)

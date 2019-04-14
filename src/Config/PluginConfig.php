@@ -40,8 +40,22 @@ namespace Skyline\Kernel\Config;
  */
 abstract class PluginConfig
 {
+    /** @var string You should declare a service name to obtain or a direct class name of a plugin */
     const PLUGIN_SERVICE_NAME = 'service';
+
+    /** @var string If you specify a class name, the plugin is loaded immediately and the class may subscribe itself. */
+    const PLUGIN_CLASS = 'class';
+    const PLUGIN_ARGUMENTS = 'arguments';
+
+    // Using a service name, PLUGIN_EVENT_LISTENERS wraps a set of PLUGIN_EVENT_NAME, PLUGIN_PRIORITY and PLUGIN_METHOD.
+    // Every single set will be registered as an event listener
+
+    /** @var string  */
+    const PLUGIN_EVENT_LISTENERS = 'listeners';
+
+    const PLUGIN_EVENT_NAME = 'event';
     const PLUGIN_PRIORITY = 'priority';
     const PLUGIN_METHOD = 'method';
-    const PLUGIN_ARGUMENTS = 'arguments';
+
+    const PLUGIN_ONCE = 'once';
 }

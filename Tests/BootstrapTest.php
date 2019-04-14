@@ -32,37 +32,20 @@
  *
  */
 
-namespace Skyline\Kernel\Loader;
-
-
-use Skyline\Kernel\Config\MainKernelConfig;
-use Symfony\Component\HttpFoundation\Request;
-use TASoft\Config\Config;
-use TASoft\Service\ServiceManager;
-
 /**
- * Loads the service manager and its parameter list
- * @package Skyline\Kernel\Loader
+ * BootstrapTest.php
+ * skyline-kernel
+ *
+ * Created on 2019-04-14 09:56 by thomas
  */
-class ServiceManagerLoader implements LoaderInterface
+
+use PHPUnit\Framework\TestCase;
+use Skyline\Kernel\Bootstrap;
+
+class BootstrapTest extends TestCase
 {
-    public function __construct()
-    {
-    }
+    public function testBootstrap() {
+        Bootstrap::bootstrap('../lib/kernel.config.php');
 
-    public function bootstrap(Config $configuration, ?Request $request)
-    {
-        $services = $configuration[ MainKernelConfig::CONFIG_SERVICES ] ?? [];
-        global $SERVICES;
-        ServiceManager::rejectGeneralServiceManager();
-        $SERVICES = ServiceManager::generalServiceManager($services);
-
-        if($path = SkyGetPath("$(C)/parameters.config.php")) {
-            $params = require $path;
-
-            foreach($params as $name => $value) {
-                $SERVICES->setParameter($name, $value);
-            }
-        }
     }
 }

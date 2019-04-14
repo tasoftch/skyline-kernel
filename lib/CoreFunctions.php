@@ -110,3 +110,14 @@ function SkyGetPath($path, bool $real = true) {
     }
     return $real ? realpath($path) : $path;
 }
+
+/**
+ * Use this function to make sure, that you do not show full paths to the client.
+ * Under debugging, the full path is returned but in production, this function only shows a relative path
+ *
+ * @param $path
+ * @return string
+ */
+function SkyDisplayPath($path) {
+
+}

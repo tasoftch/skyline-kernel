@@ -47,7 +47,7 @@ class FunctionLibraryLoader implements LoaderInterface
     public function bootstrap(Config $configuration, ?Request $request)
     {
         $path = dirname(dirname(__DIR__)) . "/lib/CoreFunctions.php";
-        require $path;
+        require_once $path;
     }
 
 }

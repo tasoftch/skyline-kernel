@@ -39,6 +39,7 @@ use Skyline\Kernel\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use Skyline\Kernel\Exception\BootstrapException;
+use TASoft\Service\ServiceManager;
 
 /**
  * This class is called from skyline entry point to load the required environment.
@@ -106,6 +107,7 @@ class Bootstrap
         }
 
         static::$configuration = $config;
+        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger("bootstrap");
         return $config;
     }
 

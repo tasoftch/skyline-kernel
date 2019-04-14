@@ -46,7 +46,7 @@ use TASoft\Config\Config;
 use TASoft\Service\Config\AbstractFileConfiguration;
 use TASoft\Service\ServiceManager;
 
-require_once 'lib/CoreFunctions.php';
+require_once '../lib/CoreFunctions.php';
 
 class ConfigurationFuncsTest extends TestCase
 {
