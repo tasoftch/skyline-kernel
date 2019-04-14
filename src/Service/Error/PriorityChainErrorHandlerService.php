@@ -79,4 +79,30 @@ class PriorityChainErrorHandlerService extends LinearChainErrorHandlerService
     {
         return $this->collection ? $this->collection->getOrderedElements() : [];
     }
+
+    /**
+     * PriorityChainErrorHandlerService constructor.
+     * The constructor expects array arguments like: [<priority>, <error-handler>]
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $args = func_get_args();
+        $priority = 0;
+
+        foreach($args as $servicePKG) {
+            if(is_array($servicePKG)) {
+                list($priority, $service) = $servicePKG;
+            } else {
+                $service = $servicePKG;
+            }
+
+            if(is_string($service))
+                $service = new $service();
+
+            if($service instanceof ErrorServiceInterface)
+                $this->addHandler($service, $priority);
+        }
+    }
 }
