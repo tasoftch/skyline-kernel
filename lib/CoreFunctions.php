@@ -32,7 +32,7 @@
  *
  */
 
-use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Config\Config;
 use TASoft\Service\Exception\ServiceException;
 use TASoft\Service\ServiceManager;
@@ -83,7 +83,7 @@ function SkyMainConfigGet($key, $default = NULL) {
  * @return bool|string
  */
 function SkyGetLocation($location, $appendix = '') {
-    $p = SkyMainConfig() [ FileConfig::CONFIG_LOCATIONS ][$location] ?? "#";
+    $p = SkyMainConfig() [ MainKernelConfig::CONFIG_LOCATIONS ][$location] ?? "#";
     if($appendix)
         $p .= "/$appendix";
     return realpath($p);
@@ -100,7 +100,7 @@ function SkyGetPath($path, bool $real = true) {
         $path = preg_replace_callback("/\\$\(([^\)]+)\)/i", function($ms) {
             global $_MAIN_CONFIGURATION;
 
-            $loc = $_MAIN_CONFIGURATION[ FileConfig::CONFIG_LOCATIONS ][$ms[1]] ?? NULL;
+            $loc = $_MAIN_CONFIGURATION[ MainKernelConfig::CONFIG_LOCATIONS ][$ms[1]] ?? NULL;
             if($loc) {
                 return $loc;
             }

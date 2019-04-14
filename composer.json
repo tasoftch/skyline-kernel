@@ -20,6 +20,7 @@
     "tasoft/config": "dev-master",
     "tasoft/service-manager": "dev-master",
     "tasoft/dependency-injection": "dev-master",
+    "tasoft/event-manager": "dev-master",
     "symfony/http-foundation": "^4.0"
   },
   "require-dev": {

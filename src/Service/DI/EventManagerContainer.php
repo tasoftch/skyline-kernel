@@ -32,9 +32,41 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+namespace Skyline\Kernel\Service\DI;
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
 
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use TASoft\EventManager\EventManager;
+use TASoft\Service\ConfigurableServiceInterface;
+use TASoft\Service\Container\AbstractContainer;
+use TASoft\Service\ServiceManager;
+use TASoft\Service\StaticConstructorServiceInterface;
+
+class EventManagerContainer extends AbstractContainer implements StaticConstructorServiceInterface, ConfigurableServiceInterface
+{
+    private $configuration;
+    private $serviceManager;
+
+    protected function loadInstance()
+    {
+        $this->instance = new EventManager();
+        $path = $this->configuration["pluginFile"] ?? NULL;
+        if(!is_file($path)) {
+            $e = new SkylineKernelDetailedException("Plugin Path Error");
+            $e->setDetails("Can not load plugins from configuration path. A php file is required");
+            throw $e;
+        }
+
+
+    }
+
+    public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
+    public function setConfiguration($configuration)
+    {
+        $this->configuration = $configuration;
+    }
+}

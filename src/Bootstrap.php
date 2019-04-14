@@ -34,6 +34,7 @@
 
 namespace Skyline\Kernel;
 
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
@@ -79,14 +80,14 @@ class Bootstrap
             throw new BootstrapException("Could not load Skyline CMS environment configuration", 500);
 
         // Apply different project directory to relative locations than current working directory
-        $locations = $core[ FileConfig::CONFIG_LOCATIONS ];
+        $locations = $core[ MainKernelConfig::CONFIG_LOCATIONS ];
         if($projectDir) {
             foreach($locations as &$loc) {
                 if($loc[0] != '/') // Do not touch absolute directory locations!
                     $loc = "$projectDir/$loc";
             }
 
-            $core[ FileConfig::CONFIG_LOCATIONS ] = $locations;
+            $core[ MainKernelConfig::CONFIG_LOCATIONS ] = $locations;
         }
 
         // Expose main configuration, so the SkyMainConfig* functions have access
@@ -95,7 +96,7 @@ class Bootstrap
         $_MAIN_CONFIGURATION = $config;
 
         // Iterate over loaders and bootstrap
-        if($loaders = $config[ FileConfig::CONFIG_LOADERS ] ?? NULL) {
+        if($loaders = $config[ MainKernelConfig::CONFIG_LOADERS ] ?? NULL) {
             foreach($loaders as $loaderClass) {
                 /** @var LoaderInterface $loaderClass */
                 $loader = new $loaderClass();

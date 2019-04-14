@@ -32,10 +32,10 @@
  *
  */
 
-namespace Skyline\Kernel;
+namespace Skyline\Kernel\Config;
 
 
-abstract class FileConfig
+abstract class MainKernelConfig
 {
     // GLOBAL CONFIG KEYS
     /** @var string bool to signalize debug mode */
@@ -50,6 +50,8 @@ abstract class FileConfig
 
     // Predefined Services
     const SERVICE_ERROR_CONTROLLER = 'errorController';
+    const SERVICE_DEPENDENCY_MANAGER = 'dependencyManager';
+    const SERVICE_EVENT_MANAGER = 'eventManager';
 
     /**
      * Loads the version from a composer.json file

@@ -32,9 +32,16 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+namespace Skyline\Kernel\Config;
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
-
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+/**
+ * Class PluginConfig is used to define array keys in the plugins.php file
+ * @package Skyline\Kernel\Config
+ */
+abstract class PluginConfig
+{
+    const PLUGIN_SERVICE_NAME = 'service';
+    const PLUGIN_PRIORITY = 'priority';
+    const PLUGIN_METHOD = 'method';
+    const PLUGIN_ARGUMENTS = 'arguments';
+}

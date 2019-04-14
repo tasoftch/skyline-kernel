@@ -41,7 +41,7 @@
 
 
 use PHPUnit\Framework\TestCase;
-use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Config\Config;
 use TASoft\Service\Config\AbstractFileConfiguration;
 use TASoft\Service\ServiceManager;
@@ -80,7 +80,7 @@ class ConfigurationFuncsTest extends TestCase
         global $_MAIN_CONFIGURATION;
         $_MAIN_CONFIGURATION = new Config([
             'PDO' => '$(loc)/test.php',
-            FileConfig::CONFIG_LOCATIONS => [
+            MainKernelConfig::CONFIG_LOCATIONS => [
                 'loc' => 'path/to/loc'
             ]
         ]);
@@ -123,7 +123,7 @@ class ConfigurationFuncsTest extends TestCase
         global $_MAIN_CONFIGURATION;
         $_MAIN_CONFIGURATION = new Config([
             'PDO' => '$(loc)/test.php',
-            FileConfig::CONFIG_LOCATIONS => [
+            MainKernelConfig::CONFIG_LOCATIONS => [
                 'loc' => '$(ROOT)/loc',
                 'ROOT' => '$(PROJ)/root',
                 "PROJ" => '~/here'
@@ -140,7 +140,7 @@ class ConfigurationFuncsTest extends TestCase
         global $_MAIN_CONFIGURATION;
         $_MAIN_CONFIGURATION = new Config([
             'PDO' => '$(loc)/test.php',
-            FileConfig::CONFIG_LOCATIONS => [
+            MainKernelConfig::CONFIG_LOCATIONS => [
                 'loc' => '$(ROOT)/loc',
                 'ROOT' => '$(PROJ)/root'
             ]

@@ -32,9 +32,28 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+namespace Skyline\Kernel\Service\DI;
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
 
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+use TASoft\DI\DependencyManager;
+use TASoft\DI\Injector\ServiceInjector;
+use TASoft\Service\Container\AbstractContainer;
+use TASoft\Service\ServiceManager;
+use TASoft\Service\StaticConstructorServiceInterface;
+
+class DependencyInjectionContainer extends AbstractContainer implements StaticConstructorServiceInterface
+{
+    private $serviceManager;
+
+    public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
+
+    protected function loadInstance()
+    {
+        $this->instance = $dm = new DependencyManager();
+        $dm->addDependencyInjector( new ServiceInjector($this->serviceManager) );
+    }
+}

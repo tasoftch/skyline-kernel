@@ -32,9 +32,6 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+return [
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
-
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+];

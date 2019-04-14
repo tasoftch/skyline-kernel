@@ -32,10 +32,14 @@
  *
  */
 
-use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Loader\ConstantsLoader;
 use Skyline\Kernel\Loader\FunctionLibraryLoader;
+use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
+use Skyline\Kernel\Service\DI\DependencyInjectionContainer;
+use Skyline\Kernel\Service\DI\EventManagerContainer;
+use TASoft\Service\Config\AbstractFileConfiguration;
 
 // For safety reasons the kernel configuration is designed for production.
 // You should change every debug or test configuration in your project source.
@@ -43,14 +47,14 @@ use Skyline\Kernel\Loader\StaticErrorHandler;
 return [
     // Nest debugging and testing into parameters
 
-    FileConfig::CONFIG_DEBUG => false,
-    FileConfig::CONFIG_TEST => false,
+    MainKernelConfig::CONFIG_DEBUG => false,
+    MainKernelConfig::CONFIG_TEST => false,
 
     // Read Skyline CMS Version
-    FileConfig::CONFIG_VERSION => FileConfig::getSkylineVersion(),
+    MainKernelConfig::CONFIG_VERSION => MainKernelConfig::getSkylineVersion(),
 
     // Specify some core locations
-    FileConfig::CONFIG_LOCATIONS => [
+    MainKernelConfig::CONFIG_LOCATIONS => [
         'kernel-lib' => __DIR__,
         'C' => '$(/)/Compiled',
 
@@ -60,9 +64,23 @@ return [
 
     // Define the core loaders. They can be overwritten by a project config or api config or what else.
     // You should not change the oder they are loaded!
-    FileConfig::CONFIG_LOADERS => [
+    MainKernelConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
         'constants' => ConstantsLoader::class,
-        "functions" => FunctionLibraryLoader::class
+        "functions" => FunctionLibraryLoader::class,
+        "services" => ServiceManagerLoader::class
+    ],
+
+    // Kernel services
+    MainKernelConfig::CONFIG_SERVICES => [
+        MainKernelConfig::SERVICE_DEPENDENCY_MANAGER => [
+            AbstractFileConfiguration::SERVICE_CONTAINER => DependencyInjectionContainer::class
+        ],
+        MainKernelConfig::SERVICE_EVENT_MANAGER => [
+            AbstractFileConfiguration::SERVICE_CONTAINER => EventManagerContainer::class,
+            AbstractFileConfiguration::SERVICE_INIT_CONFIGURATION => [
+                'pluginFile' => '$(C)/plugins.php'
+            ]
+        ]
     ]
 ];

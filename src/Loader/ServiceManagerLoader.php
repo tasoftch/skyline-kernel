@@ -32,9 +32,37 @@
  *
  */
 
+namespace Skyline\Kernel\Loader;
+
+
 use Skyline\Kernel\Config\MainKernelConfig;
+use Symfony\Component\HttpFoundation\Request;
+use TASoft\Config\Config;
+use TASoft\Service\ServiceManager;
 
-// $config is imported by Skyline\Kernel\Loader\ConstantsLoader
-/** @var TASoft\Config\Config $config */
+/**
+ * Loads the service manager and its parameter list
+ * @package Skyline\Kernel\Loader
+ */
+class ServiceManagerLoader implements LoaderInterface
+{
+    public function __construct()
+    {
+    }
 
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+    public function bootstrap(Config $configuration, ?Request $request)
+    {
+        $services = $config[ MainKernelConfig::CONFIG_SERVICES ] ?? [];
+        global $SERVICES;
+        ServiceManager::rejectGeneralServiceManager();
+        $SERVICES = ServiceManager::generalServiceManager($services);
+
+        if($path = SkyGetPath("$(C)/parameters.config.php")) {
+            $params = require $path;
+
+            foreach($params as $name => $value) {
+                $SERVICES->setParameter($name, $value);
+            }
+        }
+    }
+}

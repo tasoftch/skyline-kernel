@@ -29,7 +29,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Service\Error\AbstractErrorHandlerService;
 use Skyline\Kernel\Service\Error\ErrorServiceInterface;
 use TASoft\Config\Config;
@@ -63,8 +63,8 @@ class ErrorHandlngTest extends TestCase
 
     public function testErrorHandling() {
         $cfg = new Config([
-            FileConfig::SERVICE_ERROR_CONTROLLER => 'myErrorHandler',
-            FileConfig::CONFIG_DEBUG => true
+            MainKernelConfig::SERVICE_ERROR_CONTROLLER => 'myErrorHandler',
+            MainKernelConfig::CONFIG_DEBUG => true
         ]);
         $this->loader->bootstrap($cfg, NULL);
 

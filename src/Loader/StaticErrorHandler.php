@@ -39,7 +39,7 @@ use Skyline\Kernel\Service\Error\AbstractErrorHandlerService;
 use Skyline\Kernel\Service\Error\ErrorServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
-use Skyline\Kernel\FileConfig;
+use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Service\ServiceManager;
 
 class StaticErrorHandler implements LoaderInterface
@@ -61,13 +61,13 @@ class StaticErrorHandler implements LoaderInterface
         ini_set("display_errors", 0);
         ini_set("log_errors", 0);
 
-        if($configuration[FileConfig::CONFIG_DEBUG] ?? false) {
+        if($configuration[MainKernelConfig::CONFIG_DEBUG] ?? false) {
             error_reporting(E_ALL);
         } else {
             error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
         }
 
-        self::$errorControllerServiceName = $configuration[ FileConfig::SERVICE_ERROR_CONTROLLER ] ?? FileConfig::SERVICE_ERROR_CONTROLLER;
+        self::$errorControllerServiceName = $configuration[ MainKernelConfig::SERVICE_ERROR_CONTROLLER ] ?? MainKernelConfig::SERVICE_ERROR_CONTROLLER;
     }
 
     public static function shutdown() {
