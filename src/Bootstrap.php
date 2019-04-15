@@ -108,7 +108,7 @@ class Bootstrap
         }
 
         static::$configuration = $config;
-        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger("bootstrap", new BootstrapEvent($config));
+        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger(SKY_EVENT_BOOTSTRAP, new BootstrapEvent($config));
         return $config;
     }
 

@@ -38,6 +38,7 @@ namespace Skyline\Kernel\Service\DI;
 use Skyline\Kernel\Config\PluginConfig;
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
 use TASoft\DI\DependencyManager;
+use TASoft\EventManager\Event\EventSubscriberInterface;
 use TASoft\EventManager\EventManager;
 use TASoft\Service\ConfigurableServiceInterface;
 use TASoft\Service\Container\AbstractContainer;
@@ -64,7 +65,10 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
         $dm = NULL;
         foreach($plugins as $idx => $plugin) {
             if($class = $plugin[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
+                $plugin = new $class();
+                if($plugin instanceof EventSubscriberInterface) {
 
+                }
             } elseif($service = $plugin[ PluginConfig::PLUGIN_SERVICE_NAME ] ?? NULL) {
 
             } else {

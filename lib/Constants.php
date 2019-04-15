@@ -45,3 +45,6 @@ define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
 
 define("SKY_DEBUG", $SERVICES->getParameter("CMS.Debug"), true);
 define("SKY_TEST", $SERVICES->getParameter("CMS.Test"), true);
+
+// Bootatrap event is triggered after bootstrapping the Skyline CMS Application
+define("SKY_EVENT_BOOTSTRAP", "skyline.bootstrap");
