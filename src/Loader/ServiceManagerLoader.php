@@ -36,7 +36,6 @@ namespace Skyline\Kernel\Loader;
 
 
 use Skyline\Kernel\Config\MainKernelConfig;
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use TASoft\Service\ServiceManager;
 
@@ -50,7 +49,7 @@ class ServiceManagerLoader implements LoaderInterface
     {
     }
 
-    public function bootstrap(Config $configuration, ?Request $request)
+    public function bootstrap(Config $configuration)
     {
         $services = $configuration[ MainKernelConfig::CONFIG_SERVICES ] ?? [];
         global $SERVICES;

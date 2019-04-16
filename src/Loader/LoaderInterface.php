@@ -34,8 +34,6 @@
 
 namespace Skyline\Kernel\Loader;
 
-
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 
 /**
@@ -55,8 +53,7 @@ interface LoaderInterface
      * If Skyline CMS is used as web application, the request argument holds information about the requested URI.
      *
      * @param Config $configuration
-     * @param Request|null $request
      * @return void
      */
-    public function bootstrap(Config $configuration, ?Request $request);
+    public function bootstrap(Config $configuration);
 }

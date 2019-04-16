@@ -37,7 +37,6 @@ namespace Skyline\Kernel\Loader;
 
 use Skyline\Kernel\Service\Error\AbstractErrorHandlerService;
 use Skyline\Kernel\Service\Error\ErrorServiceInterface;
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Service\ServiceManager;
@@ -51,7 +50,7 @@ class StaticErrorHandler implements LoaderInterface
     {
     }
 
-    public function bootstrap(Config $configuration, ?Request $request)
+    public function bootstrap(Config $configuration)
     {
         set_exception_handler(static::class . "::handleException");
         set_error_handler(static::class . "::handleError");

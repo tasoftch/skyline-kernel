@@ -37,7 +37,6 @@ namespace Skyline\Kernel;
 use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Event\BootstrapEvent;
 use Skyline\Kernel\Loader\LoaderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 use Skyline\Kernel\Exception\BootstrapException;
 use TASoft\Service\ServiceManager;
@@ -57,10 +56,9 @@ class Bootstrap
      * Declare the main configuration file to boot from.
      *
      * @param string $skylineDirectory
-     * @param Request $request
      * @return string
      */
-    public static function getConfigurationPath($skylineDirectory, Request $request) {
+    public static function getConfigurationPath($skylineDirectory) {
         return "$skylineDirectory/Compiled/main.config.php";
     }
 
@@ -69,10 +67,9 @@ class Bootstrap
      *
      * @param $compiledMainConfigurationFile
      * @param string|NULL $projectDir
-     * @param Request|NULL $request
      * @return Config
      */
-    public static function bootstrap($compiledMainConfigurationFile, string $projectDir = NULL, Request $request = NULL): Config {
+    public static function bootstrap($compiledMainConfigurationFile, string $projectDir = NULL): Config {
         // Load configuration if needed
         if(is_file($compiledMainConfigurationFile))
             $core = require $compiledMainConfigurationFile;
@@ -103,7 +100,7 @@ class Bootstrap
                 /** @var LoaderInterface $loaderClass */
                 $loader = new $loaderClass();
                 /** @var LoaderInterface $loader */
-                $loader->bootstrap( $config , $request);
+                $loader->bootstrap( $config );
             }
         }
 

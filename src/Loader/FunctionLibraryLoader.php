@@ -34,8 +34,6 @@
 
 namespace Skyline\Kernel\Loader;
 
-
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 
 class FunctionLibraryLoader implements LoaderInterface
@@ -44,7 +42,7 @@ class FunctionLibraryLoader implements LoaderInterface
     {
     }
 
-    public function bootstrap(Config $configuration, ?Request $request)
+    public function bootstrap(Config $configuration)
     {
         $path = dirname(dirname(__DIR__)) . "/lib/CoreFunctions.php";
         require_once $path;

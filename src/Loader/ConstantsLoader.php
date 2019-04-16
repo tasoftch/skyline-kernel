@@ -35,7 +35,6 @@
 namespace Skyline\Kernel\Loader;
 
 
-use Symfony\Component\HttpFoundation\Request;
 use TASoft\Config\Config;
 
 class ConstantsLoader implements LoaderInterface
@@ -44,7 +43,7 @@ class ConstantsLoader implements LoaderInterface
     {
     }
 
-    public function bootstrap(Config $config, ?Request $request)
+    public function bootstrap(Config $config)
     {
         $path = dirname(dirname(__DIR__)) . "/lib/Constants.php";
         require $path;
