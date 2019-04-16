@@ -34,25 +34,28 @@
 
 namespace Skyline\Kernel\Service\DI;
 
-
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Config\PluginConfig;
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use TASoft\Collection\AbstractCollection;
 use TASoft\DI\DependencyManager;
-use TASoft\EventManager\Event\EventSubscriberInterface;
-use TASoft\EventManager\EventManager;
+use TASoft\EventManager\EventSubscriberInterface;
+use TASoft\EventManager\SubscribableEventManager;
 use TASoft\Service\ConfigurableServiceInterface;
 use TASoft\Service\Container\AbstractContainer;
 use TASoft\Service\ServiceManager;
 use TASoft\Service\StaticConstructorServiceInterface;
 
-class EventManagerContainer extends AbstractContainer implements StaticConstructorServiceInterface, ConfigurableServiceInterface
+class EventManagerContainer extends AbstractContainer implements StaticConstructorServiceInterface, ConfigurableServiceInterface, EventSubscriberInterface
 {
     private $configuration;
     private $serviceManager;
 
+    private static $plugins;
+
     protected function loadInstance()
     {
-        $this->instance = new EventManager();
+        $this->instance = $eventManager = new SubscribableEventManager();
         $path = SkyGetPath($this->configuration["pluginFile"] ?? NULL, false);
         if(!is_file($path)) {
             $e = new SkylineKernelDetailedException("Plugin Path Error");
@@ -60,21 +63,88 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
             throw $e;
         }
 
-        $plugins = require $path;
-        /** @var DependencyManager $dm */
-        $dm = NULL;
-        foreach($plugins as $idx => $plugin) {
-            if($class = $plugin[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
-                $plugin = new $class();
-                if($plugin instanceof EventSubscriberInterface) {
+        self::$plugins = require $path;
 
+        $eventManager->addSubscriberHandler(function($subscription, SubscribableEventManager $eventManager) {
+            if(is_array($subscription)) {
+                $eMessage = "";
+
+                $globalEventName = $subscription[ PluginConfig::PLUGIN_EVENT_NAME ] ?? NULL;
+                $globalPriority = $subscription[ PluginConfig::PLUGIN_PRIORITY ] ?? 0;
+                $globalOnce = $subscription[ PluginConfig::PLUGIN_ONCE ] ?? false;
+
+                $wrapper = $subscription[ PluginConfig::PLUGIN_EVENT_LISTENERS ] ?? [];
+                if(!$wrapper) {
+                    $wrapper = [ [PluginConfig::PLUGIN_METHOD => $subscription[ PluginConfig::PLUGIN_METHOD ] ?? NULL] ];
                 }
-            } elseif($service = $plugin[ PluginConfig::PLUGIN_SERVICE_NAME ] ?? NULL) {
 
-            } else {
-                trigger_error("Can not register plugin $idx because a plugin class or plugin service name is required", E_USER_WARNING);
+                foreach($wrapper as $wrap) {
+                    $eventName = $wrap[ PluginConfig::PLUGIN_EVENT_NAME ] ?? $globalEventName;
+                    if(!$eventName) { $eMessage = "No event name found for subscription" ; goto failure; }
+                    $method = $wrap[ PluginConfig::PLUGIN_METHOD ] ?? NULL;
+                    if(!$method) { $eMessage = "No method declared for event subscription $eventName" ; goto failure; }
+
+                    $priority = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalPriority;
+                    $once = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalOnce;
+
+                    if($service = $subscription[ PluginConfig::PLUGIN_SERVICE_NAME ] ?? NULL) {
+                        $cb = $this->_createPluginServiceCallback($service, $method);
+                    } elseif($class = $subscription[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
+                        $arguments = $subscription[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
+                        $cb = $this->_createPluginClassCallback($class, $method, $arguments);
+                    } else {
+                        $eMessage = "Can not create instantiation of subscription on $eventName";
+                        goto failure;
+                    }
+
+                    if($once)
+                        $eventManager->addOnce($eventName, $cb, $priority);
+                    else
+                        $eventManager->addListener($eventName, $cb, $priority);
+                }
+
+                return true;
+                failure:
+                trigger_error($eMessage, E_USER_WARNING);
             }
-        }
+            return false;
+        });
+
+        $eventManager->subscribeClass(static::class);
+    }
+
+    /**
+     * @param $class
+     * @param $method
+     * @param $arguments
+     * @param DependencyManager $dependencyManager
+     * @return callable
+     */
+    private function _createPluginClassCallback($class, $method, $arguments) {
+        return function(...$args) use ($arguments, $method, $class) {
+            static $instance = NULL;
+            if(!$instance) {
+                if($arguments) {
+                    $arguments = $this->serviceManager->mapArray( AbstractCollection::makeArray( $arguments ));
+                    $instance = new $class(...array_values($arguments));
+                } else {
+                    $instance = new $class();
+                }
+            }
+
+            return call_user_func([$instance, $method], ...$args);
+        };
+    }
+
+    /**
+     * @param $serviceName
+     * @param $method
+     * @return callable
+     */
+    private function _createPluginServiceCallback($serviceName, $method) {
+        return function(...$args) use ($serviceName, $method) {
+            return call_user_func([$this->serviceManager->get($serviceName), $method], ...$args);
+        };
     }
 
     public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)
@@ -85,5 +155,10 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
     public function setConfiguration($configuration)
     {
         $this->configuration = $configuration;
+    }
+
+    public static function getEventListeners(): array
+    {
+        return self::$plugins;
     }
 }

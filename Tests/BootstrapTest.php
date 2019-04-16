@@ -71,5 +71,13 @@ class BootstrapTest extends TestCase
 
         $this->assertFalse(SKY_DEBUG);
         $this->assertFalse(SKY_TEST);
+
+        $this->assertEquals("Reached", $this->getActualOutput());
+    }
+}
+
+class EventObserver {
+    public function myMethod() {
+        echo "Reached";
     }
 }

@@ -37,6 +37,50 @@ namespace Skyline\Kernel\Config;
 /**
  * Class PluginConfig is used to define array keys in the plugins.php file
  * @package Skyline\Kernel\Config
+ *
+ * @example
+ * plugins.php:
+ * [
+ *     ...,
+ *     'myClassPlugin' => [
+ *          PluginConfig::PLUGIN_CLASS      => MyClassPlugin::class,
+ *          PluginConfig::PLUGIN_ARGUMENTS  => [...] same notations as in services, will be passed into constructor
+ *          <events>
+ *     ],
+ *      'myServicePlugin' => [
+ *          PluginConfig::PLUGIN_SERVICE_NAME => 'myService',
+ *          <events>
+ *      ]
+ * ]
+ *
+ * <events>:
+ * <Only one event>
+ * [
+ *      PluginConfig::PLUGIN_EVENT_NAME => 'event.name',        // Required
+ *      PluginConfig::PLUGIN_PRIORITY => 0,                     // Optional, default is 0
+ *      PluginConfig::PLUGIN_METHOD => 'methodToCall',          // Required
+ *      PluginConfig::PLUGIN_ONCE => false,                     // Optional, default is false
+ * ]
+ *
+ * Multiple different events
+ * [
+ *      PluginConfig::PLUGIN_EVENT_LISTENERS => [
+ *          <Only one event>,
+ *          <Only one event>,
+ *          ...
+ *      ]
+ * ]
+ *
+ * Multiple different events with same globals
+ * [
+ *      PluginConfig::PLUGIN_EVENT_NAME => 'event.name',        // Global event name, if none set
+ *      PluginConfig::PLUGIN_PRIORITY => 0,                     // Global priority if none set
+ *      PluginConfig::PLUGIN_ONCE => false,                     // Global once if not overwritten
+ *      PluginConfig::PLUGIN_EVENT_LISTENERS => [
+ *          <Only one event>,                                   // with exception, that declared global infos are not required anymore.
+ *          ...
+ *      ]
+ * ]
  */
 abstract class PluginConfig
 {
@@ -50,12 +94,13 @@ abstract class PluginConfig
     // Using a service name, PLUGIN_EVENT_LISTENERS wraps a set of PLUGIN_EVENT_NAME, PLUGIN_PRIORITY and PLUGIN_METHOD.
     // Every single set will be registered as an event listener
 
-    /** @var string  */
+    // Wrapper for multiple listeners on the same class/service
     const PLUGIN_EVENT_LISTENERS = 'listeners';
 
     const PLUGIN_EVENT_NAME = 'event';
     const PLUGIN_PRIORITY = 'priority';
     const PLUGIN_METHOD = 'method';
 
+    //  Listen only once to the specified event
     const PLUGIN_ONCE = 'once';
 }
