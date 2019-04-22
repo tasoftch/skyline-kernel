@@ -73,7 +73,6 @@ return [
     // You should not change the oder they are loaded!
     MainKernelConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
-        "functions" => FunctionLibraryLoader::class,
         "services" => ServiceManagerLoader::class,
         'constants' => ConstantsLoader::class,
     ],

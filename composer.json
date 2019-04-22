@@ -12,7 +12,10 @@
   "autoload": {
     "psr-4": {
       "Skyline\\Kernel\\" : "src"
-    }
+    },
+    "files": [
+      "lib/CoreFunctions.php"
+    ]
   },
   "require" : {
     "php": "^7.2",
