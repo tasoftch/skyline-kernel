@@ -66,7 +66,7 @@ class ErrorHandlngTest extends TestCase
             MainKernelConfig::SERVICE_ERROR_CONTROLLER => 'myErrorHandler',
             MainKernelConfig::CONFIG_DEBUG => true
         ]);
-        $this->loader->bootstrap($cfg, NULL);
+        $this->loader->bootstrap($cfg);
 
         trigger_error("HEHE", E_USER_NOTICE);
 
@@ -115,7 +115,7 @@ class MyErrHandler extends AbstractErrorHandlerService implements ErrorServiceIn
         return $this->returnValue;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         $this->exception = func_get_args();
         return $this->returnValue;

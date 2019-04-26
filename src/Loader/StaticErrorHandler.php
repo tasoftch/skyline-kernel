@@ -40,6 +40,7 @@ use Skyline\Kernel\Service\Error\ErrorServiceInterface;
 use TASoft\Config\Config;
 use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Service\ServiceManager;
+use Throwable;
 
 class StaticErrorHandler implements LoaderInterface
 {
@@ -75,7 +76,7 @@ class StaticErrorHandler implements LoaderInterface
             static::handleError($error["type"], $error["message"], $error["file"], $error["line"], NULL);
     }
 
-    public static function handleException(\Throwable $exception) {
+    public static function handleException(Throwable $exception) {
         $SERVICES = static::$serviceManager ?: ServiceManager::generalServiceManager();
         $ec = $SERVICES->get( self::$errorControllerServiceName );
 

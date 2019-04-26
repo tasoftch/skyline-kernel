@@ -34,7 +34,6 @@
 
 use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Loader\ConstantsLoader;
-use Skyline\Kernel\Loader\FunctionLibraryLoader;
 use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 use Skyline\Kernel\Service\DI\DependencyInjectionContainer;

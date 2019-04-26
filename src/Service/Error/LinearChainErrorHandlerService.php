@@ -34,6 +34,8 @@
 
 namespace Skyline\Kernel\Service\Error;
 
+use Throwable;
+
 /**
  * The chain error handler service iterates over other error handlers until one returned TRUE, so it did handle the error completely.
  *
@@ -68,7 +70,7 @@ class LinearChainErrorHandlerService extends AbstractErrorHandlerService
     /**
      * @inheritDoc
      */
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         /** @var ErrorServiceInterface $service */
         foreach($this->getHandlers() as $service) {

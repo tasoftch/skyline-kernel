@@ -36,6 +36,7 @@ namespace Skyline\Kernel\Service\Error;
 
 
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use Throwable;
 
 class HTMLDevelopmentErrorHandlerService extends AbstractHTTPErrorHandlerService
 {
@@ -72,7 +73,7 @@ class HTMLDevelopmentErrorHandlerService extends AbstractHTTPErrorHandlerService
         return false;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         if($throwable->getCode() >= 400 && $throwable->getCode() <=599)
             http_response_code( $throwable->getCode() );

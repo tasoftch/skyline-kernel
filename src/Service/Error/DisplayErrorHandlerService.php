@@ -35,6 +35,8 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use Throwable;
+
 class DisplayErrorHandlerService extends AbstractErrorHandlerService
 {
     public function handleError(string $message, int $code, $file, $line, $ctx): bool
@@ -49,7 +51,7 @@ class DisplayErrorHandlerService extends AbstractErrorHandlerService
         return false;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         echo "Uncaught Exception (", get_class($throwable) . ") [{$throwable->getCode()}]: {$throwable->getMessage()}" . PHP_EOL;
         return false;

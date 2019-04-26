@@ -35,6 +35,7 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use ArrayAccess;
 use TASoft\Collection\PriorityCollection;
 
 /**
@@ -92,7 +93,7 @@ class PriorityChainErrorHandlerService extends LinearChainErrorHandlerService
         $priority = 0;
 
         foreach($args as $servicePKG) {
-            if(is_array($servicePKG) || $servicePKG instanceof \ArrayAccess) {
+            if(is_array($servicePKG) || $servicePKG instanceof ArrayAccess) {
                 list($priority, $service) = $servicePKG;
             } else {
                 $service = $servicePKG;

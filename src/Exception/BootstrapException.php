@@ -35,9 +35,10 @@
 namespace Skyline\Kernel\Exception;
 
 
+use RuntimeException;
 use Throwable;
 
-class BootstrapException extends \RuntimeException
+class BootstrapException extends RuntimeException
 {
     public function __construct($message = "", $code = 0, Throwable $previous = NULL, ...$args)
     {

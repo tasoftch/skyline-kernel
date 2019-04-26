@@ -35,6 +35,8 @@
 namespace Skyline\Kernel;
 
 
+use ReflectionMethod;
+
 /**
  * Every method of a class implementing this interface and matching the filter option will be registered.
  * The docComment may use @purpose annotation to specify purposes of that method.
@@ -43,12 +45,12 @@ namespace Skyline\Kernel;
  */
 interface ExposeClassMethodsInterface extends ExposeClassInterface
 {
-    const FILTER_PUBLIC = \ReflectionMethod::IS_PUBLIC;
-    const FILTER_PROTECTED = \ReflectionMethod::IS_PROTECTED;
-    const FILTER_PRIVATE = \ReflectionMethod::IS_PRIVATE;
-    const FILTER_STATIC = \ReflectionMethod::IS_STATIC;
-    const FILTER_ABSTRACT = \ReflectionMethod::IS_ABSTRACT;
-    const FILTER_FINAL = \ReflectionMethod::IS_FINAL;
+    const FILTER_PUBLIC = ReflectionMethod::IS_PUBLIC;
+    const FILTER_PROTECTED = ReflectionMethod::IS_PROTECTED;
+    const FILTER_PRIVATE = ReflectionMethod::IS_PRIVATE;
+    const FILTER_STATIC = ReflectionMethod::IS_STATIC;
+    const FILTER_ABSTRACT = ReflectionMethod::IS_ABSTRACT;
+    const FILTER_FINAL = ReflectionMethod::IS_FINAL;
     const FILTER_OBJECTIVE = 2048;
 
     const FILTER_EXCLUDE_MAGIC = 4096;

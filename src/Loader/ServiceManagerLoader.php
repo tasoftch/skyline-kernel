@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpIncludeInspection */
+
 /**
  * BSD 3-Clause License
  *

@@ -34,6 +34,8 @@
 
 namespace Skyline\Kernel\Service\Error;
 
+use Throwable;
+
 /**
  * Interface ErrorServiceInterface is able to handle errors that occured during your application launch
  *
@@ -58,8 +60,8 @@ interface ErrorServiceInterface
      * Called if an uncaught exception was thrown.
      * If this method returns true, Skyline CMS assumes the exception was handled.
      *
-     * @param \Throwable $throwable
+     * @param Throwable $throwable
      * @return bool
      */
-    public function handleException(\Throwable $throwable): bool;
+    public function handleException(Throwable $throwable): bool;
 }

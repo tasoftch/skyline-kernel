@@ -35,6 +35,8 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use Throwable;
+
 class LogErrorHandlerService extends AbstractErrorHandlerService
 {
     const EXCEPTION_ERROR_LEVEL = 10;
@@ -56,7 +58,7 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
         return false;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         $json = json_decode( file_get_contents($this->logFile), true );
         $json['E'] = [

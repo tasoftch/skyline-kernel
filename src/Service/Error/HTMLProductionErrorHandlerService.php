@@ -35,7 +35,9 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use Exception;
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use Throwable;
 
 class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
 {
@@ -43,7 +45,7 @@ class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
     {
         $level = self::detectErrorLevel($code);
         if($level == static::FATAL_ERROR_LEVEL) {
-            $e = new \Exception($message, 500);
+            $e = new Exception($message, 500);
             $this->handleException($e);
             die();
         }
@@ -51,7 +53,7 @@ class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
         return true;
     }
 
-    public function handleException(\Throwable $throwable): bool
+    public function handleException(Throwable $throwable): bool
     {
         $code = $throwable->getCode();
         $message = $throwable->getMessage();

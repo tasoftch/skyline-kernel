@@ -35,6 +35,7 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use ArrayAccess;
 use Skyline\Kernel\ExposeClassInterface;
 use TASoft\Config\Config;
 use TASoft\Service\ConfigurableServiceInterface;
@@ -59,7 +60,7 @@ abstract class AbstractErrorHandlerService implements ConfigurableServiceInterfa
     }
 
     /**
-     * @return Config|array|\ArrayAccess
+     * @return Config|array|ArrayAccess
      */
     public function getConfiguration()
     {
