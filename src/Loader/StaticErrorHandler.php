@@ -61,7 +61,7 @@ class StaticErrorHandler implements LoaderInterface
         ini_set("display_errors", 0);
         ini_set("log_errors", 0);
 
-        if($configuration[MainKernelConfig::CONFIG_DEBUG] ?? false) {
+        if(SKY_DEBUG) {
             error_reporting(E_ALL);
         } else {
             error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
