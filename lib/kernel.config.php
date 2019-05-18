@@ -39,6 +39,8 @@ use Skyline\Kernel\Loader\StaticErrorHandler;
 use Skyline\Kernel\Service\DI\DependencyInjectionContainer;
 use Skyline\Kernel\Service\DI\EventManagerContainer;
 use Skyline\Kernel\Service\Error\DisplayErrorHandlerService;
+use Skyline\Kernel\Service\Error\HTMLDevelopmentErrorHandlerService;
+use Skyline\Kernel\Service\Error\HTMLProductionErrorHandlerService;
 use Skyline\Kernel\Service\Error\LogErrorHandlerService;
 use Skyline\Kernel\Service\Error\PriorityChainErrorHandlerService;
 use TASoft\Service\Config\AbstractFileConfiguration;
@@ -89,6 +91,7 @@ return [
                 [-1, '$displayErrorHandler']
             ]
         ],
+
         'displayErrorHandler' => [
             AbstractFileConfiguration::SERVICE_CLASS => DisplayErrorHandlerService::class
         ],
@@ -98,6 +101,8 @@ return [
                 'file' => '$(L)/',
                 'env' => '%Logger.Env%'
             ]
-        ]
+        ],
+        "developmentErrorHandler" => HTMLDevelopmentErrorHandlerService::class,
+        "productionErrorHandler" => HTMLProductionErrorHandlerService::class
     ]
 ];
