@@ -102,7 +102,11 @@ return [
                 'env' => '%Logger.Env%'
             ]
         ],
-        "developmentErrorHandler" => HTMLDevelopmentErrorHandlerService::class,
-        "productionErrorHandler" => HTMLProductionErrorHandlerService::class
+        "developmentErrorHandler" => [
+            AbstractFileConfiguration::SERVICE_CLASS => HTMLDevelopmentErrorHandlerService::class
+        ],
+        "productionErrorHandler" => [
+            AbstractFileConfiguration::SERVICE_CLASS => HTMLProductionErrorHandlerService::class
+        ],
     ]
 ];
