@@ -47,11 +47,6 @@ use TASoft\Service\Config\AbstractFileConfiguration;
 // You should change every debug or test configuration in your project source.
 
 return [
-    // Nest debugging and testing into parameters
-
-    MainKernelConfig::CONFIG_DEBUG => '%CMS.Debug%',
-    MainKernelConfig::CONFIG_TEST => '%CMS.Test%',
-
     // Read Skyline CMS Version
     MainKernelConfig::CONFIG_VERSION => MainKernelConfig::getSkylineVersion(),
 

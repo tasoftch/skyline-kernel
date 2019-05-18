@@ -33,9 +33,5 @@
  */
 
 return [
-    // Nested from kernel.config.php => MainKernelConfig::CONFIG_DEBUG and MainKernelConfig::CONFIG_TEST
-    'CMS.Debug' => false,
-    'CMS.Test' => false,
-
     'Logger.Env' => false
 ];

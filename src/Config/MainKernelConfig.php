@@ -38,10 +38,7 @@ namespace Skyline\Kernel\Config;
 abstract class MainKernelConfig
 {
     // GLOBAL CONFIG KEYS
-    /** @var string bool to signalize debug mode */
-    const CONFIG_DEBUG = 'Debug';
-    /** @var string bool to signalize test mode (is in production, but in test mode) */
-    const CONFIG_TEST = 'Test';
+
     const CONFIG_LOADERS = 'loaders';
     const CONFIG_SERVICES = 'services';
     const CONFIG_LOCATIONS = 'locations';
