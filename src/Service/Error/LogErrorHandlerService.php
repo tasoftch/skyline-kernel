@@ -91,7 +91,11 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
             error_log(sprintf("ErrorLogger: File or Directory %s does not exist", SkyDisplayPath($logFile)), E_USER_WARNING);
 
         if($this->logFile) {
-            $json = json_decode( file_get_contents($this->logFile), true );
+            if(file_exists($this->logFile))
+                $json = json_decode( file_get_contents($this->logFile), true );
+            else
+                $json = [];
+
             $json['_'] = $logEnv ? $_SERVER : '<no-env>';
 
             file_put_contents($this->logFile, json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
