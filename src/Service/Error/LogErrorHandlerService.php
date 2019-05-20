@@ -35,6 +35,7 @@
 namespace Skyline\Kernel\Service\Error;
 
 
+use Skyline\Kernel\Exception\SkylineKernelDetailedException;
 use Throwable;
 
 class LogErrorHandlerService extends AbstractErrorHandlerService
@@ -69,13 +70,17 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
         else
             $json = [];
 
-        $json['E'] = [
+        $error = [
             'level' => self::EXCEPTION_ERROR_LEVEL,
             'code' => $throwable->getCode(),
             'message' => $throwable->getMessage(),
             'file' => SkyDisplayPath($throwable->getFile()),
             'line' => $throwable->getLine()
         ];
+        if($throwable instanceof SkylineKernelDetailedException)
+            $error["information"] = $throwable->getDetails();
+
+        $json['E'] = $error;
 
         file_put_contents($this->logFile, json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
         return false;
