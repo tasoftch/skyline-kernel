@@ -45,7 +45,11 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
 
     public function handleError(string $message, int $code, $file, $line, $ctx): bool
     {
-        $json = json_decode( file_get_contents($this->logFile), true );
+        if(file_exists($this->logFile))
+            $json = json_decode( file_get_contents($this->logFile), true );
+        else
+            $json = [];
+
         $json['E'] = [
             'level' => self::detectErrorLevel($code),
             'code' => $code,
@@ -60,7 +64,11 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
 
     public function handleException(Throwable $throwable): bool
     {
-        $json = json_decode( file_get_contents($this->logFile), true );
+        if(file_exists($this->logFile))
+            $json = json_decode( file_get_contents($this->logFile), true );
+        else
+            $json = [];
+
         $json['E'] = [
             'level' => self::EXCEPTION_ERROR_LEVEL,
             'code' => $throwable->getCode(),
