@@ -87,8 +87,8 @@ return [
         MainKernelConfig::SERVICE_ERROR_CONTROLLER => [
             AbstractFileConfiguration::SERVICE_CLASS => PriorityChainErrorHandlerService::class,
             AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
-                [-2, '$logErrorHandler'],
-                [-1, '$displayErrorHandler']
+                'logHandler' => [1, '$logErrorHandler'],
+                'displayHandler' => [100, '$displayErrorHandler']
             ]
         ],
 
