@@ -42,6 +42,25 @@ use TASoft\Service\ConfigurableServiceInterface;
 
 abstract class AbstractErrorHandlerService implements ConfigurableServiceInterface, ErrorServiceInterface, ExposeClassInterface
 {
+    protected static $errorCodes = [
+        E_ERROR             => 'E_ERROR',
+        E_WARNING           => 'E_WARNING',
+        E_PARSE             => 'E_PARSE',
+        E_NOTICE            => 'E_NOTICE',
+        E_CORE_ERROR        => 'E_CORE_ERROR',
+        E_CORE_WARNING      => 'E_CORE_WARNING',
+        E_COMPILE_ERROR     => 'E_COMPILE_ERROR',
+        E_COMPILE_WARNING   => 'E_COMPILE_WARNING',
+        E_USER_ERROR        => 'E_USER_ERROR',
+        E_USER_WARNING      => 'E_USER_WARNING',
+        E_USER_NOTICE       => 'E_USER_NOTICE',
+        E_STRICT            => 'E_STRICT',
+        E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
+        E_DEPRECATED        => 'E_DEPRECATED',
+        E_USER_DEPRECATED   => 'E_USER_DEPRECATED'
+    ];
+
+
     const PURPOSE = 'errorHandler';
 
     const NOTICE_ERROR_LEVEL = 0;
@@ -102,5 +121,15 @@ abstract class AbstractErrorHandlerService implements ConfigurableServiceInterfa
         }
 
         return static::FATAL_ERROR_LEVEL;
+    }
+
+    /**
+     * Tries to resolve a php intern error code into a string representation of the error
+     *
+     * @param int $internErrorCode
+     * @return string
+     */
+    public static function detectErrorName(int $internErrorCode): string {
+        return static::$errorCodes[$internErrorCode] ?? "$internErrorCode";
     }
 }

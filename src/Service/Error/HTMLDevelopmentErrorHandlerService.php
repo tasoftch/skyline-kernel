@@ -65,7 +65,7 @@ class HTMLDevelopmentErrorHandlerService extends AbstractHTTPErrorHandlerService
                     $bg = "#FDD";
                     $bbc = "#F00";
             }
-
+            $code = self::detectErrorName($code);
             echo "<pre style='border: 2px solid red; background-color: $bg; padding: 1em; border-radius: 1em; border-color: $bbc'><b>$level</b> [$code]: $message at file <b>$file</b>:$line\n</pre>";
             return true;
         }
