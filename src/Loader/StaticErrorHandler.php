@@ -56,7 +56,7 @@ class StaticErrorHandler implements LoaderInterface
         set_exception_handler(static::class . "::handleException");
         set_error_handler(static::class . "::handleError");
 
-        register_shutdown_function(static::class . "::shutdown");
+        register_shutdown_function(static::class . "::shutdown", getcwd());
 
         ini_set("display_errors", 0);
         ini_set("log_errors", 0);
@@ -70,10 +70,12 @@ class StaticErrorHandler implements LoaderInterface
         self::$errorControllerServiceName = $configuration[ MainKernelConfig::SERVICE_ERROR_CONTROLLER ] ?? MainKernelConfig::SERVICE_ERROR_CONTROLLER;
     }
 
-    public static function shutdown() {
+    public static function shutdown($cwd) {
         $error = error_get_last();
-        if($error)
+        if($error) {
+            chdir($cwd);
             static::handleError($error["type"], $error["message"], $error["file"], $error["line"], NULL);
+        }
     }
 
     public static function handleException(Throwable $exception) {
