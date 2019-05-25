@@ -52,8 +52,6 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
 
     protected function loadInstance()
     {
-        $this->instance = $sem = new SectionEventManager();
-
         $path = SkyGetPath($this->configuration["pluginFile"] ?? NULL, false);
         if(!is_file($path)) {
             $e = new SkylineKernelDetailedException("Plugin Path Error");
@@ -61,86 +59,7 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
             throw $e;
         }
 
-        $this->instance = new PluginEventManager($path, $this->serviceManager);
-    }
-
-    private function _makeSubscriberHandler(): callable {
-        return function($subscription, SubscribableEventManager $eventManager) {
-            if(is_array($subscription)) {
-                $globalEventName = $subscription[ PluginConfig::PLUGIN_EVENT_NAME ] ?? NULL;
-                $globalPriority = $subscription[ PluginConfig::PLUGIN_PRIORITY ] ?? 0;
-                $globalOnce = $subscription[ PluginConfig::PLUGIN_ONCE ] ?? false;
-
-                $wrapper = $subscription[ PluginConfig::PLUGIN_EVENT_LISTENERS ] ?? [];
-                if(!$wrapper) {
-                    $wrapper = [ [PluginConfig::PLUGIN_METHOD => $subscription[ PluginConfig::PLUGIN_METHOD ] ?? NULL] ];
-                }
-
-                foreach($wrapper as $wrap) {
-                    $eventName = $wrap[ PluginConfig::PLUGIN_EVENT_NAME ] ?? $globalEventName;
-                    if(!$eventName) { $eMessage = "No event name found for subscription" ; goto failure; }
-                    $method = $wrap[ PluginConfig::PLUGIN_METHOD ] ?? NULL;
-                    if(!$method) { $eMessage = "No method declared for event subscription $eventName" ; goto failure; }
-
-                    $priority = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalPriority;
-                    $once = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalOnce;
-
-                    if($service = $subscription[ PluginConfig::PLUGIN_SERVICE_NAME ] ?? NULL) {
-                        $cb = $this->_createPluginServiceCallback($service, $method);
-                    } elseif($class = $subscription[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
-                        $arguments = $subscription[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
-                        $cb = $this->_createPluginClassCallback($class, $method, $arguments);
-                    } else {
-                        $eMessage = "Can not create instantiation of subscription on $eventName";
-                        goto failure;
-                    }
-
-                    if($once)
-                        $eventManager->addOnce($eventName, $cb, $priority);
-                    else
-                        $eventManager->addListener($eventName, $cb, $priority);
-                }
-
-                return true;
-                failure:
-                trigger_error($eMessage, E_USER_WARNING);
-            }
-            return false;
-        };
-    }
-
-    /**
-     * @param $class
-     * @param $method
-     * @param $arguments
-     * @param DependencyManager $dependencyManager
-     * @return callable
-     */
-    private function _createPluginClassCallback($class, $method, $arguments) {
-        return function(...$args) use ($arguments, $method, $class) {
-            static $instance = NULL;
-            if(!$instance) {
-                if($arguments) {
-                    $arguments = $this->serviceManager->mapArray( AbstractCollection::makeArray( $arguments ));
-                    $instance = new $class(...array_values($arguments));
-                } else {
-                    $instance = new $class();
-                }
-            }
-
-            return call_user_func([$instance, $method], ...$args);
-        };
-    }
-
-    /**
-     * @param $serviceName
-     * @param $method
-     * @return callable
-     */
-    private function _createPluginServiceCallback($serviceName, $method) {
-        return function(...$args) use ($serviceName, $method) {
-            return call_user_func([$this->serviceManager->get($serviceName), $method], ...$args);
-        };
+        $this->instance = new PluginRootEventManager($path, $this->serviceManager);
     }
 
     public function __construct($arguments = NULL, ServiceManager $serviceManager = NULL)
