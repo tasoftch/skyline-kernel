@@ -110,6 +110,6 @@ abstract class PluginConfig
     // AVAILABLE EVENT SECTIONS
     const EVENT_SECTION_BOOTSTRAP = 'bootstrap';    // All events triggered in bootstrap phase
     const EVENT_SECTION_ROUTING = 'route';          // Section to route
-    const EVENT_SECTION_CONTROL = 'control';        // Section to control routes and actions and prepare templates, sources or what ever for render
-    const EVENT_SECTION_RENDER = 'render';          // Create a response
+    const EVENT_SECTION_CONTROL = 'control';        // Section for choosing an action controller, configure it, may be apply security
+    const EVENT_SECTION_RENDER = 'render';          // Section to call performAction and create a response
 }
