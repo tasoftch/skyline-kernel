@@ -64,7 +64,6 @@ class ErrorHandlngTest extends TestCase
     public function testErrorHandling() {
         $cfg = new Config([
             MainKernelConfig::SERVICE_ERROR_CONTROLLER => 'myErrorHandler',
-            MainKernelConfig::CONFIG_DEBUG => true
         ]);
         $this->loader->bootstrap($cfg);
 
@@ -87,14 +86,7 @@ class ErrorHandlngTest extends TestCase
         ], $this->ec->error);
 
         $this->ec->returnValue = false;
-        $zahl = $unexisting;
 
-        $this->assertEquals([
-            "Undefined variable: unexisting",
-            E_NOTICE,
-            __FILE__,
-            __LINE__ - 6
-        ], $this->ec->error);
 
         $output = $this->getActualOutput();
         $this->assertEquals("", $output);

@@ -32,52 +32,43 @@
  *
  */
 
-/**
- * BootstrapTest.php
- * skyline-kernel
- *
- * Created on 2019-04-14 09:56 by thomas
- */
+namespace Skyline\Kernel\Service\Event;
 
-use PHPUnit\Framework\TestCase;
-use Skyline\Kernel\Bootstrap;
+
+use TASoft\EventManager\Event\EventInterface;
+use TASoft\EventManager\SectionEventManager;
 use TASoft\Service\ServiceManager;
 
-class BootstrapTest extends TestCase
+class PluginEventManager extends SectionEventManager
 {
-    private $time;
-    protected function setUp()
+    private $pluginsFile;
+    private $plugins;
+
+    private $serviceManager;
+
+    private function _loadPlugins() {
+        if(NULL === $this->plugins) {
+            $this->plugins = require $this->pluginsFile;
+
+            foreach($this->plugins as $plugin) {
+                var_dump($plugin);
+            }
+        }
+    }
+
+    /**
+     * PluginEventManager constructor.
+     * @param $pluginsFile
+     */
+    public function __construct($pluginsFile, ServiceManager $serviceManager)
     {
-        parent::setUp();
-        $this->time = microtime(true);
+        $this->pluginsFile = $pluginsFile;
+        $this->serviceManager = $serviceManager;
     }
 
-    protected function tearDown()
+    public function trigger(string $eventName, EventInterface $event = NULL, ...$arguments): EventInterface
     {
-        $diff = microtime(true) - $this->time;
-        printf("%.1fms", $diff*1000);
-        parent::tearDown();
-    }
-
-    public function testBootstrap() {
-        ServiceManager::rejectGeneralServiceManager();
-        Bootstrap::bootstrap('../lib/kernel.config.php');
-
-        /** @var ServiceManager $SERVICES */
-        global $SERVICES;
-
-        $this->assertFalse( $SERVICES->getParameter("CMS.Debug") );
-        $this->assertFalse( $SERVICES->getParameter("CMS.Test") );
-
-        $this->assertFalse(SKY_DEBUG);
-        $this->assertFalse(SKY_TEST);
-
-        $this->assertEquals("Reached", $this->getActualOutput());
-    }
-}
-
-class EventObserver {
-    public function myMethod() {
-        echo "Reached";
+        $this->_loadPlugins();
+        return parent::trigger($eventName, $event, $arguments);
     }
 }

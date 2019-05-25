@@ -91,6 +91,9 @@ abstract class PluginConfig
     const PLUGIN_CLASS = 'class';
     const PLUGIN_ARGUMENTS = 'arguments';
 
+    // The event section
+    const PLUGIN_EVENT_SECTION = 'section';
+
     // Using a service name, PLUGIN_EVENT_LISTENERS wraps a set of PLUGIN_EVENT_NAME, PLUGIN_PRIORITY and PLUGIN_METHOD.
     // Every single set will be registered as an event listener
 
@@ -103,4 +106,10 @@ abstract class PluginConfig
 
     //  Listen only once to the specified event
     const PLUGIN_ONCE = 'once';
+
+    // AVAILABLE EVENT SECTIONS
+    const EVENT_SECTION_BOOTSTRAP = 'bootstrap';    // All events triggered in bootstrap phase
+    const EVENT_SECTION_ROUTING = 'route';          // Section to route
+    const EVENT_SECTION_CONTROL = 'control';        // Section to control routes and actions and prepare templates, sources or what ever for render
+    const EVENT_SECTION_RENDER = 'render';          // Create a response
 }

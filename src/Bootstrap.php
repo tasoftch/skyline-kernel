@@ -35,6 +35,7 @@
 namespace Skyline\Kernel;
 
 use Skyline\Kernel\Config\MainKernelConfig;
+use Skyline\Kernel\Config\PluginConfig;
 use Skyline\Kernel\Event\BootstrapEvent;
 use Skyline\Kernel\Loader\LoaderInterface;
 use TASoft\Config\Config;
@@ -105,7 +106,7 @@ class Bootstrap
         }
 
         static::$configuration = $config;
-        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->trigger(SKY_EVENT_BOOTSTRAP, new BootstrapEvent($config));
+        ServiceManager::generalServiceManager()->get(MainKernelConfig::SERVICE_EVENT_MANAGER)->triggerSection(PluginConfig::EVENT_SECTION_BOOTSTRAP, SKY_EVENT_BOOTSTRAP, new BootstrapEvent($config));
         return $config;
     }
 

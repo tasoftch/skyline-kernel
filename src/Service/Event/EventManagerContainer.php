@@ -32,30 +32,28 @@
  *
  */
 
-namespace Skyline\Kernel\Service\DI;
+namespace Skyline\Kernel\Service\Event;
 
-use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Config\PluginConfig;
 use Skyline\Kernel\Exception\SkylineKernelDetailedException;
 use TASoft\Collection\AbstractCollection;
 use TASoft\DI\DependencyManager;
-use TASoft\EventManager\EventSubscriberInterface;
+use TASoft\EventManager\SectionEventManager;
 use TASoft\EventManager\SubscribableEventManager;
 use TASoft\Service\ConfigurableServiceInterface;
 use TASoft\Service\Container\AbstractContainer;
 use TASoft\Service\ServiceManager;
 use TASoft\Service\StaticConstructorServiceInterface;
 
-class EventManagerContainer extends AbstractContainer implements StaticConstructorServiceInterface, ConfigurableServiceInterface, EventSubscriberInterface
+class EventManagerContainer extends AbstractContainer implements StaticConstructorServiceInterface, ConfigurableServiceInterface
 {
     private $configuration;
     private $serviceManager;
 
-    private static $plugins;
-
     protected function loadInstance()
     {
-        $this->instance = $eventManager = new SubscribableEventManager();
+        $this->instance = $sem = new SectionEventManager();
+
         $path = SkyGetPath($this->configuration["pluginFile"] ?? NULL, false);
         if(!is_file($path)) {
             $e = new SkylineKernelDetailedException("Plugin Path Error");
@@ -63,12 +61,12 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
             throw $e;
         }
 
-        self::$plugins = require $path;
+        $this->instance = new PluginEventManager($path, $this->serviceManager);
+    }
 
-        $eventManager->addSubscriberHandler(function($subscription, SubscribableEventManager $eventManager) {
+    private function _makeSubscriberHandler(): callable {
+        return function($subscription, SubscribableEventManager $eventManager) {
             if(is_array($subscription)) {
-                $eMessage = "";
-
                 $globalEventName = $subscription[ PluginConfig::PLUGIN_EVENT_NAME ] ?? NULL;
                 $globalPriority = $subscription[ PluginConfig::PLUGIN_PRIORITY ] ?? 0;
                 $globalOnce = $subscription[ PluginConfig::PLUGIN_ONCE ] ?? false;
@@ -108,9 +106,7 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
                 trigger_error($eMessage, E_USER_WARNING);
             }
             return false;
-        });
-
-        $eventManager->subscribeClass(static::class);
+        };
     }
 
     /**
@@ -155,10 +151,5 @@ class EventManagerContainer extends AbstractContainer implements StaticConstruct
     public function setConfiguration($configuration)
     {
         $this->configuration = $configuration;
-    }
-
-    public static function getEventListeners(): array
-    {
-        return self::$plugins;
     }
 }

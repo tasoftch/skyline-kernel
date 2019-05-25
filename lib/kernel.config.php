@@ -37,12 +37,12 @@ use Skyline\Kernel\Loader\ConstantsLoader;
 use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 use Skyline\Kernel\Service\DI\DependencyInjectionContainer;
-use Skyline\Kernel\Service\DI\EventManagerContainer;
 use Skyline\Kernel\Service\Error\DisplayErrorHandlerService;
 use Skyline\Kernel\Service\Error\HTMLDevelopmentErrorHandlerService;
 use Skyline\Kernel\Service\Error\HTMLProductionErrorHandlerService;
 use Skyline\Kernel\Service\Error\LogErrorHandlerService;
 use Skyline\Kernel\Service\Error\PriorityChainErrorHandlerService;
+use Skyline\Kernel\Service\Event\EventManagerContainer;
 use TASoft\Service\Config\AbstractFileConfiguration;
 
 // For safety reasons the kernel configuration is designed for production.
