@@ -80,10 +80,12 @@ class PluginRootEventManager extends SectionEventManager
                 }
 
                 foreach($wrapper as $wrap) {
+                    $factory  = $plugin[ PluginConfig::PLUGIN_FACTORY ] ?? NULL;
+
                     $eventName = $wrap[ PluginConfig::PLUGIN_EVENT_NAME ] ?? $globalEventName;
-                    if(!$eventName) { $eMessage = "No event name found for subscription" ; goto failure; }
+                    if(!$eventName && !$factory) { $eMessage = "No event name found for subscription" ; goto failure; }
                     $method = $wrap[ PluginConfig::PLUGIN_METHOD ] ?? NULL;
-                    if(!$method) { $eMessage = "No method declared for event subscription $eventName" ; goto failure; }
+                    if(!$method && !$factory) { $eMessage = "No method declared for event subscription $eventName" ; goto failure; }
 
                     $priority = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalPriority;
                     $once = $wrap[ PluginConfig::PLUGIN_PRIORITY ] ?? $globalOnce;
@@ -98,7 +100,7 @@ class PluginRootEventManager extends SectionEventManager
                             $arguments,
                             isset($plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]) && $plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]
                         );
-                    } elseif($class = $plugin[ PluginConfig::PLUGIN_FACTORY ] ?? NULL) {
+                    } elseif($factory) {
                         $arguments = $plugin[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
                         $factory = $this->_createInstance(
                             $class,
