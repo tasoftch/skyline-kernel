@@ -103,7 +103,7 @@ class PluginRootEventManager extends SectionEventManager
                     } elseif($factory) {
                         $arguments = $plugin[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
                         $factory = $this->_createInstance(
-                            $class,
+                            $factory,
                             $arguments,
                             isset($plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]) && $plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]);
                         if($factory instanceof PluginFactoryInterface) {
