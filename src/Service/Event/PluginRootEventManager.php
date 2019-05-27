@@ -35,9 +35,12 @@
 namespace Skyline\Kernel\Service\Event;
 
 
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Config\PluginConfig;
+use Skyline\Kernel\Config\PluginFactoryInterface;
 use TASoft\Collection\AbstractCollection;
 use TASoft\DI\DependencyManager;
+use TASoft\DI\Injector\FunctionArgumentInjector;
 use TASoft\EventManager\Event\EventInterface;
 use TASoft\EventManager\EventManager;
 use TASoft\EventManager\SectionEventManager;
@@ -89,7 +92,22 @@ class PluginRootEventManager extends SectionEventManager
                         $cb = $this->_createPluginServiceCallback($service, $method);
                     } elseif($class = $plugin[ PluginConfig::PLUGIN_CLASS ] ?? NULL) {
                         $arguments = $plugin[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
-                        $cb = $this->_createPluginClassCallback($class, $method, $arguments);
+                        $cb = $this->_createPluginClassCallback(
+                            $class,
+                            $method,
+                            $arguments,
+                            isset($plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]) && $plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]
+                        );
+                    } elseif($class = $plugin[ PluginConfig::PLUGIN_FACTORY ] ?? NULL) {
+                        $arguments = $plugin[ PluginConfig::PLUGIN_ARGUMENTS ] ?? [];
+                        $factory = $this->_createInstance(
+                            $class,
+                            $arguments,
+                            isset($plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]) && $plugin[ PluginConfig::PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES ]);
+                        if($factory instanceof PluginFactoryInterface) {
+                            $factory->initialize($manager, $once);
+                            continue;
+                        }
                     } else {
                         $eMessage = "Can not create instantiation of subscription on $eventName";
                         goto failure;
@@ -108,23 +126,36 @@ class PluginRootEventManager extends SectionEventManager
         }
     }
 
+    private function _createInstance($class, $arguments, bool $dependencyInjection) {
+        if($arguments) {
+            if($dependencyInjection) {
+                /** @var DependencyManager $dm */
+                $dm = $this->serviceManager->get(MainKernelConfig::SERVICE_DEPENDENCY_MANAGER);
+                return $dm->pushGroup(function() use ($dm, $class, $arguments) {
+                    @$dm->addDependencyInjector(new FunctionArgumentInjector($arguments));
+                    return $dm->call($class);
+                });
+            } else {
+                $arguments = $this->serviceManager->mapArray( AbstractCollection::makeArray( $arguments ));
+            }
+            return new $class(...array_values($arguments));
+        } else {
+            return new $class();
+        }
+    }
+
     /**
      * @param $class
      * @param $method
      * @param $arguments
-     * @param DependencyManager $dependencyManager
+     * @param bool $resolve  // specify if should resolve arguments using dependency manager
      * @return callable
      */
-    private function _createPluginClassCallback($class, $method, $arguments) {
-        return function(...$args) use ($arguments, $method, $class) {
+    private function _createPluginClassCallback($class, $method, $arguments, bool $resolve) {
+        return function(...$args) use ($arguments, $method, $class, $resolve) {
             static $instance = NULL;
             if(!$instance) {
-                if($arguments) {
-                    $arguments = $this->serviceManager->mapArray( AbstractCollection::makeArray( $arguments ));
-                    $instance = new $class(...array_values($arguments));
-                } else {
-                    $instance = new $class();
-                }
+                $instance = $this->_createInstance($class, $arguments, $resolve);
             }
 
             return call_user_func([$instance, $method], ...$args);

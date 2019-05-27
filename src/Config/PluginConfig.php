@@ -89,7 +89,9 @@ abstract class PluginConfig
 
     /** @var string If you specify a class name, the plugin is loaded immediately and the class may subscribe itself. */
     const PLUGIN_CLASS = 'class';
+    const PLUGIN_FACTORY = 'factory';
     const PLUGIN_ARGUMENTS = 'arguments';
+    const PLUGIN_ARGUMENT_SOLVE_DEPENDENCIES = 'argument-dependencies'; // boolean to specify if arguments are resolved by dependency management
 
     // The event section
     const PLUGIN_EVENT_SECTION = 'section';
