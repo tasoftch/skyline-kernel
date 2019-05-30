@@ -95,6 +95,8 @@ abstract class PluginConfig
 
     // The event section
     const PLUGIN_EVENT_SECTION = 'section';
+    // Can be specified to tell the plugin loader to instantiate the desired event manager
+    const PLUGIN_DESIRED_EVENT_MANAGER = 'eventManager';
 
     // Using a service name, PLUGIN_EVENT_LISTENERS wraps a set of PLUGIN_EVENT_NAME, PLUGIN_PRIORITY and PLUGIN_METHOD.
     // Every single set will be registered as an event listener

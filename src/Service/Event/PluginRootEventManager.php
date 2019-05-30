@@ -64,7 +64,8 @@ class PluginRootEventManager extends SectionEventManager
 
                 if($section = $plugin[ PluginConfig::PLUGIN_EVENT_SECTION ] ?? NULL) {
                     if(!isset($sectionManagers[$section])) {
-                        $sectionManagers[$section] = $m = new EventManager();
+                        $evc = $plugin[ PluginConfig::PLUGIN_DESIRED_EVENT_MANAGER ] ?? EventManager::class;
+                        $sectionManagers[$section] = $m = new $evc();
                         $this->addSectionEventManager($section, $m);
                     }
                     $manager = $sectionManagers[$section];
