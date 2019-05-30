@@ -56,6 +56,9 @@ class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
     public function handleException(Throwable $throwable): bool
     {
         $code = $throwable->getCode();
+
+        $code = min(599, max(400, $code));
+
         $message = $throwable->getMessage();
 
         $name = $this->getNameOfCode($code);
