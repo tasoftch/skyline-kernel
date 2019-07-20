@@ -41,7 +41,7 @@ use TASoft\Service\ServiceManager;
 /** @var ServiceManager $SERVICES */
 global $SERVICES;
 
-define("SKY_VERSION", $config[ MainKernelConfig::CONFIG_VERSION ], true);
+define("SKY_VERSION", MainKernelConfig::getSkylineVersion(), true);
 
 // Bootatrap event is triggered after bootstrapping the Skyline CMS Application
 define("SKY_EVENT_BOOTSTRAP", "skyline.bootstrap");

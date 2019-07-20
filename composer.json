@@ -14,7 +14,8 @@
       "Skyline\\Kernel\\" : "src"
     },
     "files": [
-      "lib/CoreFunctions.php"
+      "lib/CoreFunctions.php",
+      "lib/Constants.php"
     ]
   },
   "require" : {

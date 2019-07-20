@@ -49,8 +49,6 @@ use TASoft\Service\Config\AbstractFileConfiguration;
 // You should change every debug or test configuration in your project source.
 
 return [
-    // Read Skyline CMS Version
-    MainKernelConfig::CONFIG_VERSION => MainKernelConfig::getSkylineVersion(),
 
     // Specify some core locations
     MainKernelConfig::CONFIG_LOCATIONS => [
@@ -69,8 +67,7 @@ return [
     // You should not change the oder they are loaded!
     MainKernelConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
-        "services" => ServiceManagerLoader::class,
-        'constants' => ConstantsLoader::class,
+        "services" => ServiceManagerLoader::class
     ],
 
     // Kernel services
