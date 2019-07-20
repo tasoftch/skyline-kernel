@@ -71,6 +71,7 @@ class HTMLProductionErrorHandlerService extends AbstractHTTPErrorHandlerService
         if(!$message)
             $message = $this->getDescriptionOfCode($code);
 
+        http_response_code($code);
 
         echo '<html style="height:100%" lang="en">
 <head><title> '.$code.' '.$name.'
