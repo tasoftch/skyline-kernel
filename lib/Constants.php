@@ -45,3 +45,10 @@ define("SKY_VERSION", MainKernelConfig::getSkylineVersion(), true);
 
 // Bootatrap event is triggered after bootstrapping the Skyline CMS Application
 define("SKY_EVENT_BOOTSTRAP", "skyline.bootstrap");
+
+/**
+ * The tear down event is the very final triggered event to clean up the applications.
+ * Independent of workflows, this event IS TRIGGERED!
+ * Only exception is uncaught exceptions.
+ */
+define("SKY_EVENT_TEAR_DOWN", "skyline.tear-down");
