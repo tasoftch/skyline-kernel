@@ -128,3 +128,23 @@ function SkyDisplayPath($path) {
 
     return basename($path);
 }
+
+
+// The run modes are available in your application to detect in which mode the application was compiled.
+// The compiler creates two constants: SKY_DEBUG and SKY_TEST.
+// You should use the declared function below for backward version reasons.
+
+define("SKY_RUNMODE_PRODUCTION", 1);
+define("SKY_RUNMODE_DEBUG", 2);
+define("SKY_RUNMODE_TEST", 4);
+
+function SkyGetRunModes(): int {
+    $modes = 0;
+
+    if(defined("SKY_DEBUG") && constant("SKY_DEBUG"))
+        $modes |= SKY_RUNMODE_DEBUG;
+    if(defined("SKY_TEST") && constant("SKY_TEST"))
+        $modes |= SKY_RUNMODE_TEST;
+
+    return $modes > 0 ? $modes : SKY_RUNMODE_PRODUCTION;
+}
