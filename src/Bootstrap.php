@@ -98,10 +98,12 @@ class Bootstrap
         // Iterate over loaders and bootstrap
         if($loaders = $config[ MainKernelConfig::CONFIG_LOADERS ] ?? NULL) {
             foreach($loaders as $loaderClass) {
-                /** @var LoaderInterface $loaderClass */
-                $loader = new $loaderClass();
-                /** @var LoaderInterface $loader */
-                $loader->bootstrap( $config );
+                if($loaderClass) {
+                    /** @var LoaderInterface $loaderClass */
+                    $loader = new $loaderClass();
+                    /** @var LoaderInterface $loader */
+                    $loader->bootstrap( $config );
+                }
             }
         }
 

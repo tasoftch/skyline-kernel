@@ -67,6 +67,7 @@ return [
     // You should not change the oder they are loaded!
     MainKernelConfig::CONFIG_LOADERS => [
         'errors' => StaticErrorHandler::class,
+        'modules' => NULL,
         "services" => ServiceManagerLoader::class
     ],
 
