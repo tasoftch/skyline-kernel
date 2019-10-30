@@ -26,7 +26,8 @@
     "tasoft/service-manager": "dev-master",
     "tasoft/dependency-injection": "dev-master",
     "tasoft/event-manager": "dev-master",
-    "tasoft/tools-path": "dev-master"
+    "tasoft/tools-path": "dev-master",
+    "symfony/http-foundation": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^6"

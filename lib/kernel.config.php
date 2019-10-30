@@ -34,6 +34,7 @@
 
 use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\Kernel\Loader\ConstantsLoader;
+use Skyline\Kernel\Loader\RequestLoader;
 use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
 use Skyline\Kernel\Service\DI\DependencyInjectionContainer;
@@ -66,6 +67,7 @@ return [
     // Define the core loaders. They can be overwritten by a project config or api config or what else.
     // You should not change the oder they are loaded!
     MainKernelConfig::CONFIG_LOADERS => [
+        'requests' => RequestLoader::class,
         'errors' => StaticErrorHandler::class,
         'modules' => NULL,
         "services" => ServiceManagerLoader::class
