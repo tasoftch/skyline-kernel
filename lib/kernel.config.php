@@ -33,7 +33,6 @@
  */
 
 use Skyline\Kernel\Config\MainKernelConfig;
-use Skyline\Kernel\Loader\ConstantsLoader;
 use Skyline\Kernel\Loader\RequestLoader;
 use Skyline\Kernel\Loader\ServiceManagerLoader;
 use Skyline\Kernel\Loader\StaticErrorHandler;
