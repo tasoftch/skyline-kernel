@@ -88,7 +88,7 @@ class StaticErrorHandler implements LoaderInterface
                 if( $ec->handleException($exception) )
                     return true;
             }
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             echo "** ", $exception->getMessage();
         }
 
