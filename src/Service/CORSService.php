@@ -124,7 +124,7 @@ final class CORSService
      * @param string|NULL $scheme
      * @return string
      */
-    public static function getHostOfRequest(Request $request, string &$host = NULL, string &$scheme = NULL): string {
+    public static function getHostOfRequest(Request $request, string &$host = NULL, string &$scheme = NULL): ?string {
         $serverHost = $request->headers->get("HOST");
         $serverHost = parse_url($serverHost);
         $host = $serverHost["host"] ?? NULL;
