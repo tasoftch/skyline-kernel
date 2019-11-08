@@ -37,6 +37,8 @@ namespace Skyline\Kernel\Loader;
 
 
 use Skyline\Kernel\Config\MainKernelConfig;
+use Skyline\Module\Config\ModuleConfig;
+use Skyline\Module\Loader\ModuleLoader;
 use TASoft\Config\Config;
 use TASoft\Service\ServiceManager;
 
@@ -68,6 +70,29 @@ class ServiceManagerLoader implements LoaderInterface
 
             foreach($params as $name => $value) {
                 $SERVICES->setParameter($name, $value);
+            }
+        }
+
+        if(class_exists(ModuleLoader::class)) {
+            if($spath = ModuleLoader::getModuleInformation()[ ModuleConfig::COMPILED_SERVICE_CONFIG_PATH ] ?? NULL) {
+                $moduleServices = require $spath;
+                foreach($moduleServices as $sname => $sinfo) {
+                    $SERVICES->set($sname, $sinfo);
+                }
+            }
+
+            if($spath = ModuleLoader::getModuleInformation()[ ModuleConfig::COMPILED_PARAMETERS_CONFIG_PATH ] ?? NULL) {
+                $moduleParameters = require $spath;
+                foreach($moduleParameters as $sname => $sinfo) {
+                    $SERVICES->setParameter($sname, $sinfo);
+                }
+            }
+
+            if($spath = ModuleLoader::getModuleInformation()[ ModuleConfig::COMPILED_LOCATION_CONFIG_PATH ] ?? NULL) {
+                $locations = require $spath;
+                foreach($locations as $sname => $sinfo) {
+                    $configuration[ MainKernelConfig::CONFIG_LOCATIONS ][ $sname ] = $info;
+                }
             }
         }
     }
