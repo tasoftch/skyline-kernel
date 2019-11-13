@@ -49,13 +49,16 @@ final class CORSService
      * @param string $host
      * @param string|NULL $acceptsFrom
      * @param bool $withCredentials
+     * @param string|null $label            A label to get the host in your scripts
      */
-    public static function registerHost(string $host, $acceptsFrom = "", bool $withCredentials = NULL) {
-        $add = function($acceptsFrom) use ($host, $withCredentials) {
+    public static function registerHost(string $host, $acceptsFrom = "", bool $withCredentials = NULL, string $label = NULL) {
+        $add = function($acceptsFrom) use ($host, $withCredentials, $label) {
             if($acceptsFrom != "" && $withCredentials === NULL)
                 $withCredentials = true;
 
             self::$hosts[ $host ] [$acceptsFrom] = $withCredentials;
+            if($label)
+                self::$hosts[ $host ] ["@@"] = $label;
         };
 
         if(is_array($acceptsFrom)) {
@@ -64,6 +67,23 @@ final class CORSService
         } else {
             $add($acceptsFrom);
         }
+    }
+
+    /**
+     * Returns the host described by a label.
+     * Note that hosts can be labelled in the project.xml file for compilation.
+     * The labels are only available inside your application, to get them on demand.
+     *
+     * @param string $label
+     * @param string $default
+     * @return int|string
+     */
+    public static function getHostByLabel(string $label, $default = "") {
+        foreach (self::$hosts as $hname => $host) {
+            if(isset($host["@@"]) && $host["@@"] == $label)
+                return $hname;
+        }
+        return $default;
     }
 
     /**
