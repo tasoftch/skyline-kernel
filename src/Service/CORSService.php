@@ -145,10 +145,8 @@ final class CORSService
      * @return string
      */
     public static function getHostOfRequest(Request $request, string &$host = NULL, string &$scheme = NULL): ?string {
-        $serverHost = $request->headers->get("HOST");
-        $serverHost = parse_url($serverHost);
-        $host = $serverHost["host"] ?? NULL;
-        $scheme = $serverHost["scheme"] ?? $request->headers->get("SERVER_PROTOCOL");
+        $host = $request->headers->get("HOST");
+        $scheme = $request->isSecure() ? 'https://' : 'http://';
         return ($host && $scheme) ? "$scheme://$host" : NULL;
     }
 
