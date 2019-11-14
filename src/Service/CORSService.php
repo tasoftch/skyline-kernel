@@ -87,6 +87,33 @@ final class CORSService
     }
 
     /**
+     * Determines the used scheme of a request
+     *
+     * @param Request $request
+     * @return string
+     */
+    public static function getScheme(Request $request) {
+        return $request->isSecure() ? 'https' : 'http';
+    }
+
+    /**
+     * Returns the host described by a label.
+     * Additionally it will prepend http:// or https:// depending if the request is secure or not.
+     *
+     * @param string $label
+     * @param Request $request
+     * @param string $default
+     * @return string
+     */
+    public static function getHostAndSchemeByLabel(string $label, Request $request, $default = 'localhost') {
+        $host = self::getHostByLabel($label, $default);
+        if($host) {
+            return sprintf("%s://%s", self::getScheme($request), $host);
+        }
+        return "";
+    }
+
+    /**
      * Decide, if the request's origin is accepted by this application
      *
      * @param Request $request
