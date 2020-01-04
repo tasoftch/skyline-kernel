@@ -41,9 +41,33 @@ use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\Installer\InstallationManager;
 use Composer\Installer\PackageEvent;
 use Composer\Package\CompletePackage;
+use Skyline\Kernel\Config\MainKernelConfig;
+use TASoft\Config\Config;
+use TASoft\Service\ServiceManager;
 
 class PackageInstaller
 {
+    public static $skylineConfigurationFile = 'SkylineAppData/Compiled/main.config.php';
+    public static $skylineParametersFile = 'SkylineAppData/Compiled/parameters.config.php';
+
+    public static function getServiceManager(): ?ServiceManager {
+        static $serviceManager = NULL;
+        if(!$serviceManager) {
+            if(is_file(self::$skylineConfigurationFile)) {
+                $config = new Config( require self::$skylineConfigurationFile );
+                ServiceManager::rejectGeneralServiceManager();
+                $serviceManager = ServiceManager::generalServiceManager( $config[ MainKernelConfig::CONFIG_SERVICES ] );
+            }
+
+            if($serviceManager && is_file(self::$skylineParametersFile)) {
+                $parameters = require self::$skylineParametersFile;
+                foreach($parameters as $name => $parameter)
+                    $serviceManager->setParameter($name, $parameter);
+            }
+        }
+        return $serviceManager;
+    }
+
     public static function getInstallationDirectory(PackageEvent $event) {
         /** @var InstallOperation $op */
         $op = $event->getOperation();
