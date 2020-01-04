@@ -2,6 +2,7 @@
   "name": "skyline/kernel",
   "license": "BSD-3-Clause",
   "minimum-stability": "dev",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Thomas Abplanalp",
