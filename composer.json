@@ -31,7 +31,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^6",
-    "skyline/modules": "dev-master"
+    "skyline/modules": "dev-master",
+    "tasoft/php-pdo": "dev-master"
   },
   "scripts": {
     "post-package-install": [

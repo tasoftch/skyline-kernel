@@ -44,6 +44,8 @@ use Composer\Package\CompletePackage;
 use Skyline\Kernel\Config\MainKernelConfig;
 use TASoft\Config\Config;
 use TASoft\Service\ServiceManager;
+use TASoft\Util\PDO;
+use Exception;
 
 class PackageInstaller
 {
@@ -66,6 +68,40 @@ class PackageInstaller
             }
         }
         return $serviceManager;
+    }
+
+    /**
+     * Checks, if a table exists in the used data base.
+     * If not, tries to execute SQL for creation.
+     *
+     * @param string $tableName     The required table name
+     * @param array $creationSQL
+     * @return bool
+     */
+    public static function checkPDOTable(string $tableName, array $creationSQL): bool {
+        static $PDO;
+        if(!$PDO) {
+            $PDO = static::getServiceManager()->get( "PDO" );
+        }
+
+        if($PDO instanceof PDO) {
+            $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+            try {
+                $PDO->exec("SELECT TRUE FROM $tableName LIMIT 1");
+                echo "$tableName exists.\n";
+                return true;
+            } catch (Exception $exception) {
+                if($sql = $creationSQL[ $driver ] ?? $creationSQL[0] ?? NULL) {
+                    $PDO->exec($sql);
+                    echo "$tableName created\n";
+                    return true;
+                } else
+                    trigger_error("Could not create SQL $tableName table for driver $driver", E_USER_WARNING);
+            }
+        }
+        return false;
     }
 
     public static function getInstallationDirectory(PackageEvent $event) {
