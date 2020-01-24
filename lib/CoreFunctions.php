@@ -118,12 +118,14 @@ function SkyGetPath($path, bool $real = true) {
  * Under debugging, the full path is returned but in production, this function only shows a relative path
  *
  * @param $path
+ * @param bool $explicitDebug
+ * @param bool $explicitTest
  * @return string
  */
-function SkyDisplayPath($path) {
-    if(defined("SKY_DEBUG") && SKY_DEBUG)
+function SkyDisplayPath($path, bool $explicitDebug = false, bool $explicitTest = false) {
+    if(($explicitDebug && !$explicitTest) || (defined("SKY_DEBUG") && SKY_DEBUG))
         return $path;
-    if(defined("SKY_TEST") && SKY_TEST)
+    if($explicitTest || (defined("SKY_TEST") && SKY_TEST))
         return PathTool::relative(getcwd() . "/", $path);
 
     return basename($path);
