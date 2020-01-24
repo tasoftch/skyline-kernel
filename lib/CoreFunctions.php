@@ -123,7 +123,7 @@ function SkyGetPath($path, bool $real = true) {
  * @return string
  */
 function SkyDisplayPath($path, bool $explicitDebug = false, bool $explicitTest = false) {
-    if(($explicitDebug && !$explicitTest) || (defined("SKY_DEBUG") && SKY_DEBUG))
+    if($explicitDebug || (!$explicitTest && defined("SKY_DEBUG") && SKY_DEBUG))
         return $path;
     if($explicitTest || (defined("SKY_TEST") && SKY_TEST))
         return PathTool::relative(getcwd() . "/", $path);
