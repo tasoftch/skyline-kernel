@@ -160,7 +160,11 @@ final class CORSService
 
         $host = $origin["host"] ?? NULL;
         $scheme = $origin["scheme"] ?? NULL;
-        return ($host && $scheme) ? "$scheme://$host" : NULL;
+
+        if(isset($origin["port"]))
+            return ($host && $scheme) ? "$scheme://$host:{$origin["port"]}" : NULL;
+        else
+            return ($host && $scheme) ? "$scheme://$host" : NULL;
     }
 
     /**
