@@ -1,8 +1,6 @@
 {
   "name": "skyline/kernel",
   "license": "BSD-3-Clause",
-  "minimum-stability": "dev",
-  "version": "1.0.1",
   "authors": [
     {
       "name": "Thomas Abplanalp",
@@ -22,17 +20,15 @@
     "php": "^7.2",
     "ext-PDO": "*",
     "ext-json": "*",
-    "tasoft/config": "dev-master",
-    "tasoft/service-manager": "dev-master",
-    "tasoft/dependency-injection": "dev-master",
-    "tasoft/event-manager": "dev-master",
-    "tasoft/tools-path": "dev-master",
-    "symfony/http-foundation": "dev-master"
+    "tasoft/config": "^3",
+    "tasoft/service-manager": "^2",
+    "tasoft/dependency-injection": "^1",
+    "tasoft/event-manager": "^1",
+    "tasoft/tools-path": "^1.5",
+    "symfony/http-foundation": "^5.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6",
-    "skyline/modules": "dev-master",
-    "tasoft/php-pdo": "dev-master"
+    "phpunit/phpunit": "^6"
   },
   "scripts": {
     "post-package-install": [
