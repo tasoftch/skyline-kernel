@@ -70,7 +70,7 @@ abstract class MainKernelConfig
      * @return string
      */
     public static function getSkylineVersion(): string {
-        return static::loadVersion(__DIR__ . "/../../composer.json");
+        return '0.8.1';
     }
 
     /**
