@@ -73,6 +73,14 @@ class ServiceManagerLoader implements LoaderInterface
             }
         }
 
+		if($path = SkyGetPath("$(C)/parameters.addon.config.php")) {
+			$params = require $path;
+
+			foreach($params as $name => $value) {
+				$SERVICES->setParameter($name, $value);
+			}
+		}
+
         if(class_exists(ModuleLoader::class)) {
             if($spath = ModuleLoader::getModuleInformation()[ ModuleConfig::COMPILED_SERVICE_CONFIG_PATH ] ?? NULL) {
                 $moduleServices = require $spath;
