@@ -52,6 +52,7 @@ use TASoft\Service\ServiceManager;
 class Bootstrap
 {
     protected static $configuration;
+    public static $skylineDirectory = 'SkylineAppData/';
 
     /**
      * Declare the main configuration file to boot from.
@@ -60,6 +61,7 @@ class Bootstrap
      * @return string
      */
     public static function getConfigurationPath($skylineDirectory) {
+    	static::$skylineDirectory = $skylineDirectory;
         return "$skylineDirectory/Compiled/main.config.php";
     }
 
