@@ -17,7 +17,7 @@
     ]
   },
   "require" : {
-    "php": "^7.2",
+    "php": ">=7.2",
     "ext-PDO": "*",
     "ext-json": "*",
     "tasoft/config": "^3",

@@ -37,6 +37,7 @@ namespace Skyline\Kernel\Loader;
 
 
 use Skyline\Kernel\Config\MainKernelConfig;
+use Skyline\Kernel\Service\Manager\SkyServiceManager;
 use Skyline\Module\Config\ModuleConfig;
 use Skyline\Module\Loader\ModuleLoader;
 use TASoft\Config\Config;
@@ -57,7 +58,7 @@ class ServiceManagerLoader implements LoaderInterface
         $services = $configuration[ MainKernelConfig::CONFIG_SERVICES ] ?? [];
         global $SERVICES;
         ServiceManager::rejectGeneralServiceManager();
-        $SERVICES = ServiceManager::generalServiceManager($services);
+        $SERVICES = SkyServiceManager::generalServiceManager($services);
         /** @var ServiceManager $SERVICES */
         $SERVICES->addCustomArgumentHandler(function($key, $value) {
             if(is_string($value) && strpos($value, '$(') !== false)
