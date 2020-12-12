@@ -111,6 +111,6 @@ class StaticErrorHandler implements LoaderInterface
             if(AbstractErrorHandlerService::detectErrorLevel($code) == AbstractErrorHandlerService::FATAL_ERROR_LEVEL)
                 exit(255);
         }
-        return true;
+        return false;
     }
 }
