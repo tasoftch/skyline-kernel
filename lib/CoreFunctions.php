@@ -99,7 +99,11 @@ function SkyGetLocation($location, $appendix = '') {
  */
 function SkyGetPath($path, bool $real = true) {
     while(strpos($path, '$(') !== false) {
-        $path = preg_replace_callback("/\\$\(([^\)]+)\)/i", function($ms) {
+        $path = preg_replace_callback("/\\$\(([^)]+)\)/i", function($ms) {
+        	// Dynamic root directory implementation
+        	if($ms[1] == 'R')
+        		return rtrim( SkyGetRoot(), "/\\");
+
             global $_MAIN_CONFIGURATION;
 
             $loc = $_MAIN_CONFIGURATION[ MainKernelConfig::CONFIG_LOCATIONS ][$ms[1]] ?? NULL;
@@ -149,4 +153,11 @@ function SkyGetRunModes(): int {
         $modes |= SKY_RUNMODE_TEST;
 
     return $modes > 0 ? $modes : SKY_RUNMODE_PRODUCTION;
+}
+
+/**
+ * Get the application root
+ */
+function SkyGetRoot() {
+	return dirname(dirname(dirname(dirname(__DIR__)))) . "/";
 }

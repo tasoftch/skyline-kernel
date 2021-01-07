@@ -53,14 +53,18 @@ return [
     // Specify some core locations
     MainKernelConfig::CONFIG_LOCATIONS => [
         // The Skyline Kernel core library
-        'kernel-lib' => 'vendor/skyline/lib',
+        'kernel-lib' => "vendor/skyline/kernel/lib/",
 
         // The precompiled
         'C' => '$(/)/Compiled',
         'L' => '$(/)/Logs',
 
         // Your project MUST declare the root Skyline App Data path if different to default
-        '/' => 'SkylineAppData',
+        '/' => '$(R)/SkylineAppData',
+		
+		// The application root gets determinated dynamically in 
+		'R' => NULL,
+		'U' => '$(C)'
     ],
 
     // Define the core loaders. They can be overwritten by a project config or api config or what else.
