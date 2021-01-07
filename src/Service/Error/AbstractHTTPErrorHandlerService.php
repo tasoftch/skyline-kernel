@@ -41,7 +41,7 @@ abstract class AbstractHTTPErrorHandlerService extends AbstractErrorHandlerServi
 
     protected function getNameOfCode(int $code) {
         if(!self::$codeNames) {
-            $p = SkyGetPath('kernel-lib', 'http.codes.names.php');
+            $p = SkyGetPath('$(kernel-lib)/http.codes.names.php');
             if($p)
                 self::$codeNames = require($p);
             else
@@ -52,7 +52,7 @@ abstract class AbstractHTTPErrorHandlerService extends AbstractErrorHandlerServi
 
     protected function getDescriptionOfCode(int $code) {
         if(!self::$codeDescriptions) {
-            $p = SkyGetPath('kernel-lib', 'http.codes.descriptions.php');
+            $p = SkyGetPath('$(kernel-lib)/http.codes.descriptions.php');
             if($p)
                 self::$codeDescriptions = require($p);
             else

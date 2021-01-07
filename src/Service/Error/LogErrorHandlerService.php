@@ -92,8 +92,11 @@ class LogErrorHandlerService extends AbstractErrorHandlerService
             $this->logFile = $logFile;
         } elseif(is_dir($logFile)) {
             $this->logFile = "$logFile/" . date("Y-m-d_G.i.s_") . uniqid() . ".log.php";
-        } else
-            error_log(sprintf("ErrorLogger: File or Directory %s does not exist", SkyDisplayPath($logFile)), E_USER_WARNING);
+        } else {
+			error_log(sprintf("ErrorLogger: File or Directory %s does not exist", SkyDisplayPath($logFile)), E_USER_WARNING);
+			$this->logFile = "/dev/null";
+		}
+
 
         if($this->logFile) {
             if(file_exists($this->logFile))

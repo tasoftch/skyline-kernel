@@ -41,6 +41,7 @@ use Skyline\Kernel\Loader\LoaderInterface;
 use TASoft\Config\Config;
 use Skyline\Kernel\Exception\BootstrapException;
 use TASoft\Service\ServiceManager;
+use TASoft\Util\PathTool;
 
 /**
  * This class is called from skyline entry point to load the required environment.
@@ -85,8 +86,8 @@ class Bootstrap
         $locations = $core[ MainKernelConfig::CONFIG_LOCATIONS ];
         if($projectDir) {
             foreach($locations as &$loc) {
-                if($loc[0] != '/') // Do not touch absolute directory locations!
-                    $loc = "$projectDir/$loc";
+                if(!PathTool::isZeroPath($loc) && strpos($loc, '$(') === false) // Do not touch absolute or excaped directory locations!
+                    $loc = "$projectDir/$loc/";
             }
 
             $core[ MainKernelConfig::CONFIG_LOCATIONS ] = $locations;
