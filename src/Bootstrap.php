@@ -86,12 +86,13 @@ class Bootstrap
         $locations = $core[ MainKernelConfig::CONFIG_LOCATIONS ];
         if($projectDir) {
             foreach($locations as &$loc) {
-                if(!PathTool::isZeroPath($loc) && strpos($loc, '$(') === false) // Do not touch absolute or excaped directory locations!
+            	if(!$loc)
+            		continue;
+                if(!PathTool::isZeroPath($loc) && strpos($loc, '$(') === false && substr($loc, 0, 2) != "./") // Do not touch absolute or excaped directory locations!
                     $loc = "$projectDir/$loc/";
             }
-
-            $core[ MainKernelConfig::CONFIG_LOCATIONS ] = $locations;
         }
+		$core[ MainKernelConfig::CONFIG_LOCATIONS ] = array_filter($locations);
 
         // Expose main configuration, so the SkyMainConfig* functions have access
         $config = new Config( $core );
