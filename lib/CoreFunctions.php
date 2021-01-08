@@ -114,6 +114,8 @@ function SkyGetPath($path, bool $real = true) {
             return NULL;
         }, $path);
     }
+	// Disable in phar archive because the realpath of a file inside the archive never exists.
+	// return $real ? realpath($path) : $path;
     return $real ? realpath($path) : $path;
 }
 
@@ -158,6 +160,7 @@ function SkyGetRunModes(): int {
 /**
  * Get the application root
  */
-function SkyGetRoot() {
+function SkyGetRoot(): string
+{
 	return dirname(dirname(dirname(dirname(__DIR__)))) . "/";
 }
