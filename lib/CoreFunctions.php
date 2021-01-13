@@ -116,6 +116,8 @@ function SkyGetPath($path, bool $real = true) {
     }
 	// Disable in phar archive because the realpath of a file inside the archive never exists.
 	// return $real ? realpath($path) : $path;
+	if(substr($path, 0, 2) == './')
+		return getcwd() . substr($path, 1);
     return $path;
 }
 
