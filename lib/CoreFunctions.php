@@ -114,6 +114,8 @@ function SkyGetPath($path, bool $real = true) {
             return NULL;
         }, $path);
     }
+	if(substr($path, 0, 2) == './')
+		return getcwd() . substr($path, 1);
     return $real ? realpath($path) : $path;
 }
 
