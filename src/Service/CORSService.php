@@ -96,22 +96,22 @@ final class CORSService
         return $request->isSecure() ? 'https' : 'http';
     }
 
-    /**
-     * Returns the host described by a label.
-     * Additionally it will prepend http:// or https:// depending if the request is secure or not.
-     *
-     * @param string $label
-     * @param Request $request
-     * @param string $default
-     * @return string
-     */
-    public static function getHostAndSchemeByLabel(string $label, Request $request, $default = 'localhost') {
-        $host = self::getHostByLabel($label, $default);
-        if($host) {
-            return sprintf("%s://%s", self::getScheme($request), $host);
-        }
-        return "";
-    }
+	/**
+	 * Returns the host described by a label.
+	 * Additionally it will prepend http:// or https:// depending if the request is secure or not.
+	 *
+	 * @param string $label
+	 * @param Request $request
+	 * @param string $default
+	 * @return string
+	 */
+	public static function getHostAndSchemeByLabel(string $label, Request $request, $default = NULL) {
+		$host = self::getHostByLabel($label, NULL == $default ? $request->getHost():$default);
+		if($host) {
+			return sprintf("%s://%s", self::getScheme($request), $host);
+		}
+		return "";
+	}
 
     /**
      * Decide, if the request's origin is accepted by this application
@@ -158,13 +158,13 @@ final class CORSService
 
         $origin = parse_url($origin);
 
-        $host = $origin["host"] ?? NULL;
-        $scheme = $origin["scheme"] ?? NULL;
+		$host = $origin["host"] ?? NULL;
+		$scheme = $origin["scheme"] ?? NULL;
 
-        if(isset($origin["port"]))
-            return ($host && $scheme) ? "$scheme://$host:{$origin["port"]}" : NULL;
-        else
-            return ($host && $scheme) ? "$scheme://$host" : NULL;
+		if(isset($origin["port"]))
+			$host = "$host:{$origin["port"]}";
+
+		return ($host && $scheme) ? "$scheme://$host" : NULL;
     }
 
     /**
