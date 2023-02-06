@@ -44,7 +44,7 @@ class ErrorHandlngTest extends TestCase
     /** @var MyErrHandler */
     private $ec;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $sm = new ServiceManager();

@@ -75,10 +75,10 @@ class Bootstrap
      */
     public static function bootstrap($compiledMainConfigurationFile, string $projectDir = NULL): Config {
         // Load configuration if needed
-        if(is_file($compiledMainConfigurationFile))
+		if(is_array($compiledMainConfigurationFile))
+			$core = $compiledMainConfigurationFile;
+		elseif(is_file($compiledMainConfigurationFile))
             $core = require $compiledMainConfigurationFile;
-        elseif(is_array($compiledMainConfigurationFile))
-            $core = $compiledMainConfigurationFile;
         else
             throw new BootstrapException("Could not load Skyline CMS environment configuration", 500);
 

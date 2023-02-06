@@ -46,7 +46,7 @@ use TASoft\Config\Config;
 use TASoft\Service\Config\AbstractFileConfiguration;
 use TASoft\Service\ServiceManager;
 
-require_once '../lib/CoreFunctions.php';
+require_once __DIR__ . '/../lib/CoreFunctions.php';
 
 class ConfigurationFuncsTest extends TestCase
 {
@@ -112,7 +112,7 @@ class ConfigurationFuncsTest extends TestCase
             'PDO' => '%PDO%'
         ]);
 
-        $sm->setParameter("P", 'My PDO');
+        $sm->setParameter("PDO", 'My PDO');
         $this->assertEquals("My PDO", SkyMainConfigGet('PDO'));
     }
 
@@ -143,6 +143,7 @@ class ConfigurationFuncsTest extends TestCase
             ]
         ]);
 
+		$this->expectException(\PHPUnit\Framework\Error\Warning::class);
         $this->assertEquals("~/here/root/loc/test.php", SkyMainConfigGet('PDO'));
     }
 
