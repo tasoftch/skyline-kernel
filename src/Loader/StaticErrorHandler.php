@@ -80,14 +80,18 @@ class StaticErrorHandler implements LoaderInterface
 
     public static function handleException(Throwable $exception) {
         try {
-            $SERVICES = static::$serviceManager ?: ServiceManager::generalServiceManager();
-            $ec = $SERVICES->get( self::$errorControllerServiceName );
+            $SERVICES = static::$serviceManager ?: ServiceManager::generalServiceManager([]);
+            if($SERVICES->serviceExists(self::$errorControllerServiceName)) {
+				$ec = $SERVICES->get( self::$errorControllerServiceName );
 
-            if($ec) {
-                /** @var ErrorServiceInterface $ec */
-                if( $ec->handleException($exception) )
-                    return true;
-            }
+				if($ec) {
+					/** @var ErrorServiceInterface $ec */
+					if( $ec->handleException($exception) )
+						return true;
+				}
+			} else {
+				printf("-- %d: %s\n%s:\n%d\n", $exception->getCode(), $exception->getMessage(), $exception->getFile(), $exception->getLine());
+			}
         } catch (Throwable $throwable) {
             echo "** ", $exception->getMessage();
         }
