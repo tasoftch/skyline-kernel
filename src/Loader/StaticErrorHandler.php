@@ -99,14 +99,19 @@ class StaticErrorHandler implements LoaderInterface
 
     public static function handleError($code, $msg, $file, $line, $ctx = NULL) {
         if(error_reporting() & $code) {
-            $SERVICES = static::$serviceManager ?: ServiceManager::generalServiceManager();
-            $ec = $SERVICES->get( self::$errorControllerServiceName );
+            $SERVICES = static::$serviceManager ?: ServiceManager::generalServiceManager([]);
+			if($SERVICES->serviceExists(self::$errorControllerServiceName)) {
+				$ec = $SERVICES->get( self::$errorControllerServiceName );
 
-            if($ec) {
-                /** @var ErrorServiceInterface $ec */
-                if( $ec->handleError($msg, $code, $file, $line, $ctx) )
-                    return true;
-            }
+				if($ec) {
+					/** @var ErrorServiceInterface $ec */
+					if( $ec->handleError($msg, $code, $file, $line, $ctx) )
+						return true;
+				}
+			} else {
+				echo "-- $code: $msg\n$file:$line\n\n";
+			}
+
 
             if(AbstractErrorHandlerService::detectErrorLevel($code) == AbstractErrorHandlerService::FATAL_ERROR_LEVEL)
                 exit(255);
